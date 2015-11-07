@@ -7,8 +7,8 @@
     <ProjectGuid>{3981DB19-40C6-4076-A9A1-EB09E2494CD7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ethereum_Rpc.NET</RootNamespace>
-    <AssemblyName>Ethereum_Rpc.NET</AssemblyName>
+    <RootNamespace>EthereumRpc</RootNamespace>
+    <AssemblyName>EthereumRpc</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,11 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs" />
+    <Compile Include="Converters\HexToIntConverter.cs" />
+    <Compile Include="EthereumService.cs" />
+    <Compile Include="MethodExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcConnector.cs" />
+    <Compile Include="RpcMethod.cs" />
+    <Compile Include="RpcObjects\SyncStatus.cs" />
+    <Compile Include="RpcRequest.cs" />
+    <Compile Include="RpcResult.cs" />
+    <Compile Include="Sha.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
