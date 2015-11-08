@@ -20,5 +20,10 @@ namespace EthereumRpc
         {
             return GetEnumDescription(value);
         }
+
+        public static string ToJsonMethodName(this BlockParam value)
+        {
+            return GetEnumDescription(value);
+        }
     }
 }

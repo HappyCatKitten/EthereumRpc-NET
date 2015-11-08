@@ -6,20 +6,29 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Configuration;
+using System.Security.Policy;
+using EthereumRpc.RpcObjects;
 
 namespace EthereumRpc
 {
     public class RpcConnector
     {
-        public static RpcResult MakeRequest(RpcRequest rpcRequest)
+        public static Connection Connection{ get; set; }
+
+        public RpcResult MakeRequest(RpcRequest rpcRequest)
         {
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("http://localhost:8545");
+            if(Connection==null)
+                throw new Exception("Connection property hasnt been set");
+
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}:{1}", Connection.Url, Connection.Port));
             //SetBasicAuthHeader(webRequest, _coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
             //webRequest.Credentials = new NetworkCredential(_coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
             webRequest.ContentType = "application/json-rpc";
             webRequest.Method = "POST";
-            webRequest.Proxy = null;
+            webRequest.Proxy = Connection.Proxy;
             webRequest.Timeout = 5000;
+            
 
             var data = rpcRequest.ToJson();
 
@@ -67,13 +76,6 @@ namespace EthereumRpc
             }
 
             return null;
-        }
-
-
-        public static Byte[] GetBytes(string value)
-        {
-            String json = JsonConvert.SerializeObject(value);
-            return Encoding.UTF8.GetBytes(json);
         }
     }
 }
