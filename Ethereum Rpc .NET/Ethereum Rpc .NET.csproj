@@ -48,21 +48,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="Converters\HexToIntConverter.cs" />
+    <Compile Include="Ethereum\Address.cs" />
+    <Compile Include="Connection\ConnectionOptions.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="EthereumService.cs" />
+    <Compile Include="RpcObjects\TransactionParams.cs" />
+    <Compile Include="Service\EthereumService.cs" />
     <Compile Include="MethodExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RpcConnector.cs" />
-    <Compile Include="RpcMethod.cs" />
-    <Compile Include="RpcObjects\StringArrayRpcResult.cs" />
+    <Compile Include="Connection\RpcConnector.cs" />
+    <Compile Include="RpcObjects\RpcMethod.cs" />
     <Compile Include="RpcObjects\SyncStatus.cs" />
-    <Compile Include="RpcRequest.cs" />
+    <Compile Include="RpcObjects\RpcRequest.cs" />
     <Compile Include="RpcObjects\RpcResultBase.cs" />
-    <Compile Include="Sha.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

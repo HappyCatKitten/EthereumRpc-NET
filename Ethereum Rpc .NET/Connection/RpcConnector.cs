@@ -14,19 +14,19 @@ namespace EthereumRpc
 {
     public class RpcConnector
     {
-        public static Connection Connection{ get; set; }
+        public static ConnectionOptions ConnectionOptions{ get; set; }
 
         public RpcResult MakeRequest(RpcRequest rpcRequest)
         {
-            if(Connection==null)
-                throw new Exception("Connection property hasnt been set");
+            if(ConnectionOptions==null)
+                throw new Exception("ConnectionOptions property hasnt been set");
 
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}:{1}", Connection.Url, Connection.Port));
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}:{1}", ConnectionOptions.Url, ConnectionOptions.Port));
             //SetBasicAuthHeader(webRequest, _coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
             //webRequest.Credentials = new NetworkCredential(_coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
             webRequest.ContentType = "application/json-rpc";
             webRequest.Method = "POST";
-            webRequest.Proxy = Connection.Proxy;
+            webRequest.Proxy = ConnectionOptions.Proxy;
             webRequest.Timeout = 5000;
             
 

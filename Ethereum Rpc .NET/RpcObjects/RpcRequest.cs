@@ -16,7 +16,7 @@ namespace EthereumRpc
         public string Method { get; set; }
  
         [JsonProperty(PropertyName = "params", Order = 0)]
-        public string[] Params { get; set; }
+        public object[] Params { get; set; }
 
         [JsonProperty(PropertyName = "id", Order = 0)]
         public int Id { get; set; }
@@ -29,7 +29,7 @@ namespace EthereumRpc
             Method = rpcMethod.ToJsonMethodName();
         }
 
-        public void AddParam(string value)
+        public void AddParam(object value)
         {
             var list = Params.ToList();
             list.Add(value);

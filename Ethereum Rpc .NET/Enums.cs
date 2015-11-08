@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EthereumRpc
 {
-    public enum BlockParam
+    public enum BlockTag
     {
         [Description("nothing")]
         Nothing,

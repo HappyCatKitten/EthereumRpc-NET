@@ -21,9 +21,26 @@ namespace EthereumRpc
             return GetEnumDescription(value);
         }
 
-        public static string ToJsonMethodName(this BlockParam value)
+        public static string ToJsonMethodName(this BlockTag value)
         {
             return GetEnumDescription(value);
         }
+
+        public static string ToHexString(this int value)
+        {
+            return string.Format("0x{0}", 2.ToString("X").ToLower());
+        }
+
+        public static int HexToInt(this string value)
+        {
+            if (value.Length == 2)
+            {
+                return 2;
+            }
+            
+            return Convert.ToInt32(value, 16);
+        }
+
+
     }
 }

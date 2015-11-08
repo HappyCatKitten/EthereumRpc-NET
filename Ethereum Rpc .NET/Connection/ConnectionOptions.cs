@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EthereumRpc
 {
-    public class Connection
+    public class ConnectionOptions
     {
         public string Url { get; set; }
         public string Port { get; set; }
