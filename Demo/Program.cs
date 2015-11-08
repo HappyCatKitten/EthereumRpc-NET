@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EthereumRpc;
 
-namespace Ethereum_Rpc.NET
+namespace Demo
 {
     class Program
     {
@@ -20,8 +20,8 @@ namespace Ethereum_Rpc.NET
 
             var ethereumService = new EthereumService(connection);
 
-            //Console.WriteLine(ethereumService.GetWeb3ClientVersion());
-            //Console.WriteLine(ethereumService.GetWeb3Sha3("Hello world"));
+            Console.WriteLine(ethereumService.GetWeb3ClientVersion());
+            Console.WriteLine(ethereumService.GetWeb3Sha3("Hello world"));
             //Console.WriteLine(ethereumService.GetNetVersion());
             //Console.WriteLine(ethereumService.GetNetListening());
             //Console.WriteLine(ethereumService.GetNetPeerCount());
