@@ -6,9 +6,6 @@
 Supported RPC calls
 --------
 
-- 70% completed
-- 
-
 Roadmap
 --------
 
