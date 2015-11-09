@@ -23,6 +23,7 @@ namespace Demo
             var exampleTxHash = "0x79b636e7a28e74b6d1db3be815e2658c759dd3213605ca7916b3a19402d0ba42";
             var exampleBlockHash = "0xca3130089dca52a645b1545a0f04930257dea601b54011aececd616d04fec12f";
             var exampleBlockNumber = 514064;
+            var exampleAddress = "0x63a9975ba31b0b9626b34300f7f627147df1f526";
 
             //Console.WriteLine(ethereumService.GetWeb3ClientVersion());
             //Console.WriteLine(ethereumService.GetWeb3Sha3("Hello world"));
@@ -37,9 +38,9 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetGasPrice());
             //ethereumService.GetAccounts().ToList().ForEach(i => Console.Write(@"[{0}] ", i));
             //Console.WriteLine(ethereumService.GetBlockNumber());
-            //Console.WriteLine(ethereumService.GetBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1", BlockTag.Latest));
-            //Console.WriteLine(ethereumService.GetStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 100, BlockTag.Latest));
-            //Console.WriteLine(ethereumService.GetTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1", BlockTag.Latest));
+            //Console.WriteLine(ethereumService.GetBalance(exampleAddress, BlockTag.Latest));
+            //Console.WriteLine(ethereumService.GetStorageAt(exampleAddress, 100, BlockTag.Latest));
+            //Console.WriteLine(ethereumService.GetTransactionCount(exampleAddress, BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetBlockTransactionCountByHash(exampleBlockHash)); 
             //Console.WriteLine(ethereumService.GetBlockTransactionCountByNumber(BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetUncleCountByBlockHash(exampleBlockHash));
@@ -64,9 +65,12 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetUncleByBlockHashAndIndex(exampleBlockHash,0)); // doesnt seem to return the uncle
             //Console.WriteLine(ethereumService.GetUncleByBlockNumberAndIndex(exampleBlockNumber, 0)); // doesnt seem to return the uncle
 
-            ethereumService.GetCompilers().ToList().ForEach(i => Console.Write(@"[{0}] ", i));
-    
-            
+            //ethereumService.GetCompilers().ToList().ForEach(i => Console.Write(@"[{0}] ", i));
+
+            //Console.WriteLine(ethereumService.CompileSolidity()); //not yet implemented
+            //Console.WriteLine(ethereumService.CompileLLL()); //not yet implemented
+            //Console.WriteLine(ethereumService.CompileSerpent()); //not yet implemented
+
             Console.ReadLine();
         }
     }

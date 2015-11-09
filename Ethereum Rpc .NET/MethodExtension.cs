@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using EthereumRpc;
 
-namespace EthereumRpc
+namespace System
 {
     public static class MethodExtension
     {
@@ -40,6 +42,14 @@ namespace EthereumRpc
 
             return Convert.ToInt32(value, 16);
         }
+
+
+        public static BigInteger ToBigInteger(this string value)
+        {
+            var bigInteger = BigInteger.Parse(value.Substring(2), Globalization.NumberStyles.HexNumber);
+            return bigInteger;
+        }
+
 
         public static long HexToLong(this string value)
         {

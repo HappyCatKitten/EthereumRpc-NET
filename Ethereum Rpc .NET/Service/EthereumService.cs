@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
+using System.Linq;
+using System.Numerics;
 using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
 using Newtonsoft.Json;
@@ -210,7 +213,7 @@ namespace EthereumRpc
         /// <param name="blockTag"> integer block number</param>
         /// <param name="blockNumber">Block param</param>
         /// <returns></returns>
-        public long GetBalance(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public BigInteger GetBalance(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBalance);
 
@@ -230,8 +233,17 @@ namespace EthereumRpc
                 rpcRequest.AddParam(blockNumber.ToString());
             }
 
+
+
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
-            var balance = Convert.ToInt64(rpcResult.Result, 16);
+
+            if (rpcResult.Result == null)
+            {
+                return 0;
+            }
+
+            string value = rpcResult.Result.ToString();
+            var balance = value.ToBigInteger();
 
             return balance;
         }
@@ -652,8 +664,23 @@ namespace EthereumRpc
             return compilerList.ToArray();
         }
 
+        public string CompileSolidity()
+        {
+            throw new Exception("not yet implemented");
+        }
 
-        
+        public string CompileLLL()
+        {
+            throw new Exception("not yet implemented");
+        }
+
+        public string CompileSerpent()
+        {
+            throw new Exception("not yet implemented");
+        }
+
+
+
 
 
     }
