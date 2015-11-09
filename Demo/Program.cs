@@ -31,7 +31,7 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetNetListening());
             //Console.WriteLine(ethereumService.GetNetPeerCount());
             //Console.WriteLine(ethereumService.GetProtocolVersion());
-            //Console.WriteLine(ethereumService.GetSyncing());
+            Console.WriteLine(ethereumService.GetSyncing());
             //Console.WriteLine(ethereumService.GetCoinbase().Value);
             //Console.WriteLine(ethereumService.GetMining());
             //Console.WriteLine(ethereumService.GetHashrate());
@@ -45,7 +45,7 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetBlockTransactionCountByNumber(BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetUncleCountByBlockHash(exampleBlockHash));
             //Console.WriteLine(ethereumService.GetUncleCountByBlockNumber(10));
-            //Console.WriteLine(ethereumService.GetCode("0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b", BlockTag.Latest));
+            //Console.WriteLine(ethereumService.GetCode(exampleAddress, BlockTag.Latest));
 
 
             //Console.WriteLine(ethereumService.Sign("0xd1ade25ccd3d550a7eb532ac759cac7be09c2719", "School bus")); // return nothing

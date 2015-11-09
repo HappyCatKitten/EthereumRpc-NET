@@ -119,10 +119,12 @@ namespace EthereumRpc
             if (rpcResult.Result.GetType()!=typeof(Boolean))
             {
                 var syncStatus = JsonConvert.DeserializeObject<SyncStatus>(rpcResult.Result);
+                
                 return syncStatus;
             }
 
-            return null;
+            return new SyncStatus() {IsSyncing = false};
+            
         }
 
         /// <summary>

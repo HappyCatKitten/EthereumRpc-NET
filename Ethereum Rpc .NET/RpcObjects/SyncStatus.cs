@@ -11,12 +11,24 @@ namespace EthereumRpc.RpcObjects
     {
 
         [JsonProperty(PropertyName = "startingBlock", Order = 0)]
-        public int StartingBlock { get; set; }
+        public string StartingBlock { get; set; }
 
         [JsonProperty(PropertyName = "currentBlock")]
-        public int CurrentBlock { get; set; }
+        public string CurrentBlock { get; set; }
 
         [JsonProperty(PropertyName = "highestBlock", Order = 0)]
-        public int HighestBlock { get; set; }
+        public string HighestBlock { get; set; }
+
+        public bool IsSyncing { get; set; }
+
+        public override string ToString()
+        {
+            var toString = string.Empty;
+            toString += "StartingBlock:{0}".FormatLine(StartingBlock);
+            toString += "CurrentBlock:{0}".FormatLine(CurrentBlock);
+            toString += "HighestBlock:{0}".FormatLine(HighestBlock);
+            toString += "IsSyncing:{0}".FormatLine(IsSyncing);
+            return toString;
+        }
     }
 }

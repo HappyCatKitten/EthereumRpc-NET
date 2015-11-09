@@ -21,27 +21,38 @@ namespace EthereumRpc
             if(ConnectionOptions==null)
                 throw new Exception("ConnectionOptions property hasnt been set");
 
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}:{1}", ConnectionOptions.Url, ConnectionOptions.Port));
-            //SetBasicAuthHeader(webRequest, _coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
-            //webRequest.Credentials = new NetworkCredential(_coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
+            if(!ConnectionOptions.IsUrlValid)
+                throw new EthereumRpcException(string.Format("Specified address '{0}:{1}' is not valid", ConnectionOptions.Url, ConnectionOptions.Port));
+
+            var webRequest = (HttpWebRequest)WebRequest.Create(ConnectionOptions.FullUrl);
+
+            if (ConnectionOptions.NetworkCredential != null)
+            {
+                //SetBasicAuthHeader(webRequest, _coinService.Parameters.RpcUsername, _coinService.Parameters.RpcPassword);
+                webRequest.Credentials = ConnectionOptions.NetworkCredential;
+            }
+
             webRequest.ContentType = "application/json-rpc";
             webRequest.Method = "POST";
             webRequest.Proxy = ConnectionOptions.Proxy;
-            webRequest.Timeout = 5000;
-            
+            webRequest.Timeout = ConnectionOptions.TimeOut;
 
             var data = rpcRequest.ToJson();
 
-            Byte[] byteArray = Encoding.UTF8.GetBytes(data);
+            var byteArray = Encoding.UTF8.GetBytes(data);
             webRequest.ContentLength = byteArray.Length;
 
             try
             {
-                using (Stream dataStream = webRequest.GetRequestStream())
+                using (var dataStream = webRequest.GetRequestStream())
                 {
                     dataStream.Write(byteArray, 0, byteArray.Length);
                     dataStream.Dispose();
                 }
+            }
+            catch (WebException exception)
+            {
+                throw new EthereumRpcException(string.Format("Could not connect to ethereum on network address {0}:{1}. Check Ethereum is running and the correct port is specified (8545 for live)", ConnectionOptions.Url, ConnectionOptions.Port));
             }
             catch (Exception exception)
             {
@@ -53,11 +64,11 @@ namespace EthereumRpc
             {
                 String json;
 
-                using (WebResponse webResponse = webRequest.GetResponse())
+                using (var webResponse = webRequest.GetResponse())
                 {
-                    using (Stream stream = webResponse.GetResponseStream())
+                    using (var stream = webResponse.GetResponseStream())
                     {
-                        using (StreamReader reader = new StreamReader(stream))
+                        using (var reader = new StreamReader(stream))
                         {
                             var result = reader.ReadToEnd();
 
@@ -72,7 +83,7 @@ namespace EthereumRpc
             }
             catch (WebException webException)
             {
-
+                throw new EthereumRpcException(string.Format("Ethereum returned unknown response"));
             }
 
             return null;

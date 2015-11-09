@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -14,7 +15,7 @@ namespace System
         public static string GetEnumDescription(Enum value)
         {
             var field = value.GetType().GetField(value.ToString());
-            var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attributes = (DescriptionAttribute[]) field.GetCustomAttributes(typeof (DescriptionAttribute), false);
             return (attributes.Any()) ? attributes.First().Description : value.ToString();
         }
 
@@ -59,6 +60,21 @@ namespace System
             }
 
             return Convert.ToInt64(value, 16);
+        }
+
+        public static bool IsUri(this string source)
+        {
+            if (!string.IsNullOrEmpty(source) && Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute))
+            {
+                Uri tempValue;
+                return (Uri.TryCreate(source, UriKind.RelativeOrAbsolute, out tempValue));
+            }
+            return (false);
+        }
+
+        public static string FormatLine(this string source, params object[] objects)
+        {
+            return string.Format(string.Format("{0}{1}", source,Environment.NewLine), objects);
         }
     }
 }

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EthereumRpcException.cs" />
     <Compile Include="Ethereum\Address.cs" />
     <Compile Include="Connection\ConnectionOptions.cs" />
     <Compile Include="Enums.cs" />
