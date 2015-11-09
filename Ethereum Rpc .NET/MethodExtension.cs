@@ -40,7 +40,5 @@ namespace EthereumRpc
             
             return Convert.ToInt32(value, 16);
         }
-
-
     }
 }

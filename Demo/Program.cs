@@ -20,8 +20,8 @@ namespace Demo
 
             var ethereumService = new EthereumService(connection);
 
-            Console.WriteLine(ethereumService.GetWeb3ClientVersion());
-            Console.WriteLine(ethereumService.GetWeb3Sha3("Hello world"));
+            //Console.WriteLine(ethereumService.GetWeb3ClientVersion());
+            //Console.WriteLine(ethereumService.GetWeb3Sha3("Hello world"));
             //Console.WriteLine(ethereumService.GetNetVersion());
             //Console.WriteLine(ethereumService.GetNetListening());
             //Console.WriteLine(ethereumService.GetNetPeerCount());
@@ -43,7 +43,16 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetEthGetCode("0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",quanity:2));
             //Console.WriteLine(ethereumService.GetEthSign("0xd1ade25ccd3d550a7eb532ac759cac7be09c2719","School bus")); // return nothing
             //Console.WriteLine(ethereumService.GetEthSendTransaction("0xb60e8dd61c5d32be8058bb8eb970870f07233155", "0xd46e8dd67c5d32be8058bb8eb970870f072445675",30400, "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675")); //return nothing
+            //Console.WriteLine(ethereumService.GethSendRawTransaction("0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675")); // returns nothing
 
+
+
+            //Console.WriteLine(ethereumService.GetEthEstimateGas()); // not yet implemented
+            //Console.WriteLine(ethereumService.GetEthGetBlockByHash()); // not yet implemented
+
+
+            Console.WriteLine(ethereumService.GetEthGetBlockByNumber(100,BlockTag.Quantity,true));
+            
 
             Console.ReadLine();
         }

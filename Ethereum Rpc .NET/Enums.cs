@@ -9,8 +9,8 @@ namespace EthereumRpc
 {
     public enum BlockTag
     {
-        [Description("nothing")]
-        Nothing,
+        [Description("quanitiy")]
+        Quantity,
         [Description("latest")]
         Latest,
         [Description("earliest")]

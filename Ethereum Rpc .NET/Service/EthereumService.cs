@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EthereumRpc;
 using EthereumRpc.RpcObjects;
 using Newtonsoft.Json;
 
@@ -211,18 +213,18 @@ namespace EthereumRpc
         /// <param name="blockTag"> integer block number</param>
         /// <param name="blockNumber">Block param</param>
         /// <returns></returns>
-        public long GetEthGetBalance(string address, BlockTag blockTag = BlockTag.Nothing, int blockNumber = -1)
+        public long GetEthGetBalance(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBalance);
 
             rpcRequest.AddParam(address);
 
-            if (blockTag != BlockTag.Nothing && blockNumber > -1)
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
             {
                 throw new Exception("Balance tag and block number cannot both be provided, chose either");
             }
 
-            if (blockTag != BlockTag.Nothing)
+            if (blockTag != BlockTag.Quantity)
             {
                 rpcRequest.AddParam(blockTag.ToJsonMethodName());
             }
@@ -245,19 +247,19 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer block number</param>
         /// <returns>the value at this storage position.</returns>
-        public long GetEthGetStorageAt(string address,int storagePosition, BlockTag blockTag = BlockTag.Nothing, int blockNumber = -1)
+        public long GetEthGetStorageAt(string address,int storagePosition, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getStorageAt);
 
             rpcRequest.AddParam(address);
             rpcRequest.AddParam(storagePosition.ToString());
 
-            if (blockTag != BlockTag.Nothing && blockNumber > -1)
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
             {
                 throw new Exception("Balance tag and block number cannot both be provided, chose either");
             }
 
-            if (blockTag != BlockTag.Nothing)
+            if (blockTag != BlockTag.Quantity)
             {
                 rpcRequest.AddParam(blockTag.ToJsonMethodName());
             }
@@ -279,18 +281,18 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer block number,</param>
         /// <returns>integer of the number of transactions send from this address.</returns>
-        public long GetEthGetTransactionCount(string address, BlockTag blockTag = BlockTag.Nothing, int blockNumber = -1)
+        public long GetEthGetTransactionCount(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionCount);
 
             rpcRequest.AddParam(address);
 
-            if (blockTag != BlockTag.Nothing && blockNumber > -1)
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
             {
                 throw new Exception("Balance tag and block number cannot both be provided, chose either");
             }
 
-            if (blockTag != BlockTag.Nothing)
+            if (blockTag != BlockTag.Quantity)
             {
                 rpcRequest.AddParam(blockTag.ToJsonMethodName());
             }
@@ -327,16 +329,16 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer of a block number,</param>
         /// <returns></returns>
-        public long GetEthGetBlockTransactionCountByNumber(BlockTag blockTag = BlockTag.Nothing, int blockNumber = -1)
+        public long GetEthGetBlockTransactionCountByNumber(BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockTransactionCountByNumber);
            
-            if (blockTag != BlockTag.Nothing && blockNumber > -1)
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
             {
                 throw new Exception("Balance tag and block number cannot both be provided, chose either");
             }
 
-            if (blockTag != BlockTag.Nothing)
+            if (blockTag != BlockTag.Quantity)
             {
                 rpcRequest.AddParam(blockTag.ToJsonMethodName());
             }
@@ -387,17 +389,17 @@ namespace EthereumRpc
         /// <param name="blockTag"></param>
         /// <param name="blockNumber">integer block number,</param>
         /// <returns></returns>
-        public string GetEthGetCode(string address, BlockTag blockTag = BlockTag.Nothing, int blockNumber = -1)
+        public string GetEthGetCode(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getCode);
             rpcRequest.AddParam(address);
 
-            if (blockTag != BlockTag.Nothing && blockNumber > -1)
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
             {
                 throw new Exception("Balance tag and block number cannot both be provided, chose either");
             }
 
-            if (blockTag != BlockTag.Nothing)
+            if (blockTag != BlockTag.Quantity)
             {
                 rpcRequest.AddParam(blockTag.ToJsonMethodName());
             }
@@ -464,8 +466,88 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
+        /// <summary>
+        /// Creates new message call transaction or a contract creation for signed transactions.
+        /// </summary>
+        /// <param name="data">The signed transaction data.</param>
+        /// <returns> the transaction hash, or the zero hash if the transaction is not yet available.</returns>
+        public string GethSendRawTransaction(string data)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_sendRawTransaction);
+
+            rpcRequest.AddParam(new { data = data });
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            return rpcResult.Result;
+        }
+
+        public string GetEth_Call(string from, string to, int gas, string data, int gasPrice = -1, int value = -1, int nonse = -1)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_call);
+
+            var transactionParams = new TransactionParams();
+            transactionParams.From = from;
+            transactionParams.To = to;
+            transactionParams.Gas = gas.ToHexString();
+            transactionParams.Data = data;
+
+            if (gasPrice > -1)
+                transactionParams.GasPrice = gas.ToHexString();
+
+            if (value > -1)
+                transactionParams.Value = value.ToHexString();
+
+            if (nonse > -1)
+                transactionParams.Nonse = nonse.ToHexString();
+
+            rpcRequest.AddParam(transactionParams);
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            return rpcResult.Result;
+        }
+
+        public string GetEthEstimateGas()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_estimateGas);
+            throw new Exception("not implemented");
+            return string.Empty;
+        }
+
+        public string GetEthGetBlockByHash()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockByHash);
+            throw new Exception("not implemented");
+            return string.Empty;
+        }
+
+        public string GetEthGetBlockByNumber(int blockNumber, BlockTag blockTag, bool returnObject)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockByNumber);
+
+            if (blockTag != BlockTag.Quantity && blockNumber > -1)
+            {
+                throw new Exception("Balance tag and block number cannot both be provided, chose either");
+            }
+
+            if (blockTag != BlockTag.Quantity)
+            {
+                rpcRequest.AddParam(blockTag.ToJsonMethodName());
+            }
+            else
+            {
+                rpcRequest.AddParam(blockNumber.ToHexString());
+            }
+
+            rpcRequest.AddParam(returnObject);
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            return rpcResult.Result;
+        }
+
+
 
         
-
     }
 }

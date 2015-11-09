@@ -54,6 +54,7 @@
     <Compile Include="Ethereum\Address.cs" />
     <Compile Include="Connection\ConnectionOptions.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Ethereum\Block.cs" />
     <Compile Include="RpcObjects\TransactionParams.cs" />
     <Compile Include="Service\EthereumService.cs" />
     <Compile Include="MethodExtension.cs" />
