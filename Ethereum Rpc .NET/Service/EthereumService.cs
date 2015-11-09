@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EthereumRpc;
+using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
 using Newtonsoft.Json;
 
@@ -48,6 +44,7 @@ namespace EthereumRpc
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
             return rpcResult.Result;
         }
+
         /// <summary>
         ///  Returns Keccak-256 (not the standardized SHA3-256) of the given data.
         /// </summary>
@@ -100,7 +97,7 @@ namespace EthereumRpc
         /// Returns the current ethereum protocol version.
         /// </summary>
         /// <returns>The current ethereum protocol version</returns>
-        public string GetEthProtocolVersion()
+        public string GetProtocolVersion()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_protocolVersion);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -111,7 +108,7 @@ namespace EthereumRpc
         /// Returns an object object with data about the sync status or FALSE.
         /// </summary>
         /// <returns></returns>
-        public SyncStatus GetEthSyncing()
+        public SyncStatus GetSyncing()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_syncing);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -129,7 +126,7 @@ namespace EthereumRpc
         /// Returns the client coinbase address.
         /// </summary>
         /// <returns>the current coinbase address.</returns>
-        public Address GetEthCoinbase()
+        public Address GetCoinbase()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_coinbase);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -141,7 +138,7 @@ namespace EthereumRpc
         /// Returns true if client is actively mining new blocks.
         /// </summary>
         /// <returns>returns true of the client is mining, otherwise false.</returns>
-        public bool GetEthMining()
+        public bool GetMining()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_mining);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -153,7 +150,7 @@ namespace EthereumRpc
         /// Returns the number of hashes per second that the node is mining with.
         /// </summary>
         /// <returns>number of hashes per second.</returns>
-        public long GetEthHashrate()
+        public long GetHashrate()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_hashrate);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -166,7 +163,7 @@ namespace EthereumRpc
         /// Returns the current price per gas in wei.
         /// </summary>
         /// <returns>integer of the current gas price in wei.</returns>
-        public long GetEthGasPrice()
+        public long GetGasPrice()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_gasPrice);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -179,7 +176,7 @@ namespace EthereumRpc
         /// Returns a list of addresses owned by client.
         /// </summary>
         /// <returns>addresses owned by the client.</returns>
-        public string[] GetEthAccounts()
+        public string[] GetAccounts()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_accounts);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -197,7 +194,7 @@ namespace EthereumRpc
         /// Returns the number of most recent block.
         /// </summary>
         /// <returns> integer of the current block number the client is on.</returns>
-        public long GetEthBlockNumber()
+        public long GetBlockNumber()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_blockNumber);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
@@ -213,7 +210,7 @@ namespace EthereumRpc
         /// <param name="blockTag"> integer block number</param>
         /// <param name="blockNumber">Block param</param>
         /// <returns></returns>
-        public long GetEthGetBalance(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public long GetBalance(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBalance);
 
@@ -247,7 +244,7 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer block number</param>
         /// <returns>the value at this storage position.</returns>
-        public long GetEthGetStorageAt(string address,int storagePosition, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public long GetStorageAt(string address,int storagePosition, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getStorageAt);
 
@@ -281,7 +278,7 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer block number,</param>
         /// <returns>integer of the number of transactions send from this address.</returns>
-        public long GetEthGetTransactionCount(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public long GetTransactionCount(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionCount);
 
@@ -312,12 +309,16 @@ namespace EthereumRpc
         /// </summary>
         /// <param name="blockHash"> hash of a block</param>
         /// <returns> integer of the number of transactions in this block.</returns>
-        public long GetEthGetBlockTransactionCountByHash(string blockHash)
+        public long GetBlockTransactionCountByHash(string blockHash)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockTransactionCountByHash);
             //todo validate the 20 byte block hash
             rpcRequest.AddParam(blockHash);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            if (rpcResult.Result == null)
+                return 0;
+
             var count = Convert.ToInt64(rpcResult.Result, 16);
 
             return count;
@@ -329,7 +330,7 @@ namespace EthereumRpc
         /// <param name="blockTag">Block Param</param>
         /// <param name="blockNumber">integer of a block number,</param>
         /// <returns></returns>
-        public long GetEthGetBlockTransactionCountByNumber(BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public long GetBlockTransactionCountByNumber(BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockTransactionCountByNumber);
            
@@ -357,11 +358,15 @@ namespace EthereumRpc
         /// </summary>
         /// <param name="hashBlock">hash of a block</param>
         /// <returns> integer of the number of uncles in this block.</returns>
-        public long GetEthGetUncleCountByBlockHash(string hashBlock)
+        public long GetUncleCountByBlockHash(string hashBlock)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getUncleCountByBlockHash);
             rpcRequest.AddParam(hashBlock);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            if (rpcResult.Result == null)
+                return 0;
+
             var ethBlockNumber = Convert.ToInt64(rpcResult.Result, 16);
 
             return ethBlockNumber;
@@ -372,7 +377,7 @@ namespace EthereumRpc
         /// </summary>
         /// <param name="blockNumber">integer of a block number</param>
         /// <returns>integer of the number of uncles in this block.</returns>
-        public long GetEthEetUncleCountByBlockNumber(int blockNumber)
+        public long GetUncleCountByBlockNumber(int blockNumber)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getUncleCountByBlockNumber);
             rpcRequest.AddParam(blockNumber.ToHexString());
@@ -389,7 +394,7 @@ namespace EthereumRpc
         /// <param name="blockTag"></param>
         /// <param name="blockNumber">integer block number,</param>
         /// <returns></returns>
-        public string GetEthGetCode(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
+        public string GetCode(string address, BlockTag blockTag = BlockTag.Quantity, int blockNumber = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getCode);
             rpcRequest.AddParam(address);
@@ -418,7 +423,7 @@ namespace EthereumRpc
         /// <param name="address">address</param>
         /// <param name="data">Data to sign</param>
         /// <returns>Signed data</returns>
-        public string GetEthSign(string address, string data)
+        public string Sign(string address, string data)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_sign);
             rpcRequest.AddParam(address);
@@ -438,13 +443,13 @@ namespace EthereumRpc
         /// <param name="data">(optional) The compiled code of a contract</param>
         /// <param name="gasPrice">(optional, default: To-Be-Determined) Integer of the gasPrice used for each paid gas</param>
         /// <param name="value">(optional) Integer of the value send with this transaction</param>
-        /// <param name="nonse">(optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.</param>
+        /// <param name="nonce">(optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.</param>
         /// <returns>the transaction hash, or the zero hash if the transaction is not yet available.</returns>
-        public string GetEthSendTransaction(string from, string to, int gas, string data, int gasPrice = -1, int value = -1,  int nonse = -1)
+        public string SendTransaction(string from, string to, int gas, string data, int gasPrice = -1, int value = -1,  int nonce = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_sendTransaction);
 
-            var transactionParams = new TransactionParams();
+            var transactionParams = new Transaction();
             transactionParams.From = from;
             transactionParams.To = to;
             transactionParams.Gas = gas.ToHexString();
@@ -456,8 +461,8 @@ namespace EthereumRpc
             if (value > -1)
                 transactionParams.Value = value.ToHexString();
 
-            if (nonse > -1)
-                transactionParams.Nonse = nonse.ToHexString();
+            if (nonce > -1)
+                transactionParams.Nonce = nonce.ToHexString();
 
             rpcRequest.AddParam(transactionParams);
 
@@ -471,7 +476,7 @@ namespace EthereumRpc
         /// </summary>
         /// <param name="data">The signed transaction data.</param>
         /// <returns> the transaction hash, or the zero hash if the transaction is not yet available.</returns>
-        public string GethSendRawTransaction(string data)
+        public string SendRawTransaction(string data)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_sendRawTransaction);
 
@@ -481,11 +486,11 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
-        public string GetEth_Call(string from, string to, int gas, string data, int gasPrice = -1, int value = -1, int nonse = -1)
+        public string Call(string from, string to, int gas, string data, int gasPrice = -1, int value = -1, int nonce = -1)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_call);
 
-            var transactionParams = new TransactionParams();
+            var transactionParams = new Transaction();
             transactionParams.From = from;
             transactionParams.To = to;
             transactionParams.Gas = gas.ToHexString();
@@ -497,8 +502,8 @@ namespace EthereumRpc
             if (value > -1)
                 transactionParams.Value = value.ToHexString();
 
-            if (nonse > -1)
-                transactionParams.Nonse = nonse.ToHexString();
+            if (nonce > -1)
+                transactionParams.Nonce = nonce.ToHexString();
 
             rpcRequest.AddParam(transactionParams);
 
@@ -507,21 +512,27 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
-        public string GetEthEstimateGas()
+        public string EstimateGas()
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_estimateGas);
             throw new Exception("not implemented");
             return string.Empty;
         }
 
-        public string GetEthGetBlockByHash()
+        public Block GetBlockByHash(string hash,bool returnFullBlock)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockByHash);
-            throw new Exception("not implemented");
-            return string.Empty;
+            rpcRequest.AddParam(hash);
+            rpcRequest.AddParam(returnFullBlock);
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var block = JsonConvert.DeserializeObject<Block>(json);
+
+            return block;
         }
 
-        public string GetEthGetBlockByNumber(int blockNumber, BlockTag blockTag, bool returnObject)
+        public Block GetBlockByNumber(int blockNumber, BlockTag blockTag, bool returnFullObject)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getBlockByNumber);
 
@@ -539,15 +550,111 @@ namespace EthereumRpc
                 rpcRequest.AddParam(blockNumber.ToHexString());
             }
 
-            rpcRequest.AddParam(returnObject);
+            rpcRequest.AddParam(returnFullObject);
 
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var block = JsonConvert.DeserializeObject<Block>(json);
 
-            return rpcResult.Result;
+            return block;
+        }
+
+        public Transaction GetTransactionByHash(string hash)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionByHash);
+            rpcRequest.AddParam(hash);
+            rpcRequest.AddParam("true");
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var tx = JsonConvert.DeserializeObject<Transaction>(json);
+
+            return tx;
+        }
+
+        public Transaction GetTransactionByBlockHashAndIndex(string hash, int index)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionByBlockHashAndIndex);
+            rpcRequest.AddParam(hash);
+            rpcRequest.AddParam(index.ToHexString());
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var tx = JsonConvert.DeserializeObject<Transaction>(json);
+
+            return tx;
+        }
+
+        public Transaction GetTransactionByBlockNumberAndIndex(int blockNumber, int index)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionByBlockNumberAndIndex);
+            rpcRequest.AddParam(blockNumber.ToHexString());
+            rpcRequest.AddParam(index.ToHexString());
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var tx = JsonConvert.DeserializeObject<Transaction>(json);
+
+            return tx;
+        }
+
+        public Transaction GetTransactionReceipt(string transactionHash)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getTransactionReceipt);
+            rpcRequest.AddParam(transactionHash);
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var tx = JsonConvert.DeserializeObject<Transaction>(json);
+
+            return tx;
         }
 
 
 
+        public Block GetUncleByBlockHashAndIndex(string hash, int index)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getUncleByBlockHashAndIndex);
+            rpcRequest.AddParam(hash);
+            rpcRequest.AddParam(index.ToHexString());
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var block = JsonConvert.DeserializeObject<Block>(json);
+
+            return block;
+        }
+
+        public Block GetUncleByBlockNumberAndIndex(int blockNumber, int index)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getUncleByBlockNumberAndIndex);
+            rpcRequest.AddParam(blockNumber.ToHexString());
+            rpcRequest.AddParam(index.ToHexString());
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var json = JsonConvert.SerializeObject(rpcResult.Result);
+            var block = JsonConvert.DeserializeObject<Block>(json);
+
+            return block;
+        }
+
+        public string[] GetCompilers()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getCompilers);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            var compilerList = new List<string>();
+            foreach (var account in rpcResult.Result)
+            {
+                compilerList.Add(account.Value);
+            }
+
+            return compilerList.ToArray();
+        }
+
+
         
+
+
     }
 }

@@ -28,17 +28,27 @@ namespace EthereumRpc
 
         public static string ToHexString(this int value)
         {
-            return string.Format("0x{0}", 2.ToString("X").ToLower());
+            return string.Format("0x{0}", value.ToString("X").ToLower());
         }
 
         public static int HexToInt(this string value)
         {
             if (value.Length == 2)
             {
-                return 2;
+                return 0;
             }
-            
+
             return Convert.ToInt32(value, 16);
+        }
+
+        public static long HexToLong(this string value)
+        {
+            if (value.Length == 2)
+            {
+                return 0;
+            }
+
+            return Convert.ToInt64(value, 16);
         }
     }
 }
