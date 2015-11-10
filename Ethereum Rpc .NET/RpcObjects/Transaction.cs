@@ -13,19 +13,19 @@ namespace EthereumRpc.RpcObjects
         [JsonProperty(PropertyName = "to", Order = 0)]
         public string To { get; set; }
 
-        [JsonProperty(PropertyName = "from")]
+        [JsonProperty(PropertyName = "from", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string From { get; set; }
 
-        [JsonProperty(PropertyName = "gas", Order = 0)]
+        [JsonProperty(PropertyName = "gas", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Gas { get; set; }
 
-        [JsonProperty(PropertyName = "data", Order = 0)]
+        [JsonProperty(PropertyName = "data", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Data { get; set; }
 
         [JsonProperty(PropertyName = "gasPrice", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string GasPrice { get; set; }
 
-        [JsonProperty(PropertyName = "Value", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "value", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Value { get; set; }
 
         [JsonProperty(PropertyName = "nonce", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
