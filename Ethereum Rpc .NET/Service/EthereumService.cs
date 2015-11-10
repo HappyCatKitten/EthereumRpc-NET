@@ -659,5 +659,74 @@ namespace EthereumRpc
         {
             throw new Exception("not yet implemented");
         }
+
+        /// <summary>
+        /// Creates a filter object, based on filter options, to notify when the state changes (logs). To check if the state has changed, call GetFilterChanges.
+        /// </summary>
+        /// <param name="fromBlock">(optional, default: "latest") Integer block number, </param>
+        /// <param name="toBlock"></param>
+        /// <param name="address"></param>
+        /// <param name="topics"></param>
+        /// <returns></returns>
+        public string NewFilter(string fromBlock = null, string toBlock = null, string address = null, string[] topics = null)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_newFilter);
+            
+            var filter = new Filter(fromBlock, toBlock, address, topics);
+            rpcRequest.AddParam(filter);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            return rpcResult.Result;
+        }
+
+        public string NewBlockFilter()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_newBlockFilter);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
+
+        public string NewPendingTransactionFilter()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_newPendingTransactionFilter);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
+
+        public bool UninstallFilter(string filterId)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_uninstallFilter);
+            rpcRequest.AddParam(filterId);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
+
+        public Log[] GetFilterChanges(string filterId)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterChanges);
+            rpcRequest.AddParam(filterId);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            var logs = JsonConvert.DeserializeObject<Log>(rpcResult.Result);
+            return logs;
+        }
+
+
+        public Log[] GetFilterLogs(string filterId)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterLogs);
+            rpcRequest.AddParam(filterId);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            var logs = JsonConvert.DeserializeObject<Log>(rpcResult.Result);
+            return logs;
+        }
+
+
+
+
+
+
+
     }
 }

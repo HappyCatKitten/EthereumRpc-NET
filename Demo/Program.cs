@@ -41,8 +41,8 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetBalance("0xcab3e4e71d5f5578c62eb7da9014220761952148", BlockTag.Latest));
 
 
-            var t = new Transaction() {From = privateAddress1, To = privateAddress2, Value = "0x9184e72a" };
-            Console.WriteLine(ethereumService.SendTransaction(t));
+            //var t = new Transaction() {From = privateAddress1, To = privateAddress2, Value = "0x9184e72a" };
+            //Console.WriteLine(ethereumService.SendTransaction(t));
             //Console.WriteLine(ethereumService.SendTransaction(privateAddress1, privateAddress2, -1, null,-1,350000)); //return nothing
 
             //Console.WriteLine(ethereumService.GetWeb3ClientVersion());
@@ -89,6 +89,16 @@ namespace Demo
             //Console.WriteLine(ethereumService.CompileSolidity()); //not yet implemented
             //Console.WriteLine(ethereumService.CompileLLL()); //not yet implemented
             //Console.WriteLine(ethereumService.CompileSerpent()); //not yet implemented
+
+
+            //Console.WriteLine(ethereumService.NewFilter(exampleAddress));
+            //Console.WriteLine(ethereumService.NewBlockFilter());
+            //Console.WriteLine(ethereumService.NewPendingTransactionFilter());
+            //Console.WriteLine(ethereumService.UninstallFilter("0x3"));
+
+            //ethereumService.GetFilterChanges("0x3").ToList().ForEach(i => Console.Write(@"[{0}] ", i)); //not return logs - [0]
+            //ethereumService.GetFilterLogs("0x3").ToList().ForEach(i => Console.Write(@"[{0}] ", i));  //not return logs - [0]
+
 
             Console.ReadLine();
         }
