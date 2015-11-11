@@ -70,10 +70,19 @@ Configuration
     </appSettings>
 			
 	</configuration>
+	
+	
+Getting started
+--------
+
+ 	    var connectionOptions = new ConnectionOptions()
+            {
+                Port = "8545",
+                Url = "http://localhost"
+            };
 
 
-
-
+            var ethereumService = new EthereumService(connectionOptions);
 
 Roadmap
 --------
