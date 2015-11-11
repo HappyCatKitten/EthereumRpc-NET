@@ -86,10 +86,11 @@ Getting started
 Roadmap
 --------
 
-- All RPC calls implemented - December 1st
-- Address Parser - December 1st
-- Hashing functions - December 1st
-- 
+- All RPC calls implemented
+- Address Parser
+- Hash functions
+- Helpers for non ethereum types
+
 Support
 
 lawrence@9thirteencreative.com
