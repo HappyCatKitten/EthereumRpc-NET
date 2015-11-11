@@ -5,7 +5,7 @@
 
 Notes: Shh protocol is partially implemented and db_putString, db_getString, db_putHex, db_getHex have been deprecitated
 
-Objects
+Suppoerted objects
 --------
 
 - Address
