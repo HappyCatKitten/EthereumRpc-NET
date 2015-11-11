@@ -701,32 +701,137 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
-        public Log[] GetFilterChanges(string filterId)
+        public string[] GetFilterChanges(string filterId)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterChanges);
             rpcRequest.AddParam(filterId);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
-
-            var logs = JsonConvert.DeserializeObject<Log>(rpcResult.Result);
-            return logs;
+            var list = new List<string>();
+            foreach (var account in rpcResult.Result)
+            {
+                list.Add(account.Value);
+            }
+            return list.ToArray();
         }
 
 
-        public Log[] GetFilterLogs(string filterId)
+        public string[] GetFilterLogs(string filterId)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterLogs);
             rpcRequest.AddParam(filterId);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var list = new List<string>();
+            foreach (var account in rpcResult.Result)
+            {
+                list.Add(account.Value);
+            }
+            return list.ToArray();
+        }
 
-            var logs = JsonConvert.DeserializeObject<Log>(rpcResult.Result);
-            return logs;
+
+        public string[] GetLogs(Log log)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getLogs);
+            rpcRequest.AddParam(log);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var list = new List<string>();
+            foreach (var account in rpcResult.Result)
+            {
+                list.Add(account.Value);
+            }
+            return list.ToArray();
+        }
+
+        public Work GetWork()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getWork);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            var list = new List<string>();
+            foreach (var account in rpcResult.Result)
+            {
+                list.Add(account.ToString());
+            }
+
+
+            var work = new Work()
+            {
+                BlockHeaderPowHash = list[0],
+                SeedHash = list[1],
+                Target = list[2]
+            };
+
+            return work;
+        }
+
+        /// <summary>
+        /// Used for submitting a proof-of-work solution.
+        /// </summary>
+        /// <param name="nonce">The nonce found(64 bits)</param>
+        /// <param name="powHash">The header's pow-hash (256 bits)</param>
+        /// <param name="mix">The mix digest(256 bits)</param>
+        /// <returns> returns true if the provided solution is valid, otherwise false.</returns>
+        public bool SubmitWork(string nonce, string powHash, string mix)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_submitWork);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            rpcRequest.AddParam(nonce);
+            rpcRequest.AddParam(powHash);
+            rpcRequest.AddParam(mix);
+
+            return rpcResult.Result;
         }
 
 
 
 
+        /// <summary>
+        /// Used for submitting mining hashrate.
+        /// </summary>
+        /// <param name="hashRate">a hexadecimal string representation (32 bytes) of the hash rate</param>
+        /// <param name="clientId">A random hexadecimal(32 bytes) ID identifying the client</param>
+        /// <returns></returns>
+        public bool SubmitHashrate(string hashRate, string clientId)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_submitHashrate);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            rpcRequest.AddParam(hashRate);
+            rpcRequest.AddParam(clientId);
+
+            return rpcResult.Result;
+        }
+
+        /// <summary>
+        /// Returns the current whisper protocol version.
+        /// </summary>
+        /// <returns>The current whisper protocol version</returns>
+        public string ShhVersion()
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.shh_version);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
 
 
+        public string ShhPost(string from, string to, string[] topics, string payload, string priority, string ttl)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.shh_post);
 
+            var whisper = new Whisper()
+            {
+                From = "0x04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a03e245533f97284d442460f2998cd41858798ddfd4d661997d3940272b717b1",
+                To = "0x3e245533f97284d442460f2998cd41858798ddf04f96a5e25610293e42a73908e93ccc8c4d4dc0edcfa9fa872f50cb214e08ebf61a0d4d661997d3940272b717b1",
+                Payload =  "0x7b2274797065223a226d6",
+                Priority = "0x64",
+                Ttl = "0x64",
+            };
+
+            rpcRequest.AddParam(whisper);
+
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
     }
 }

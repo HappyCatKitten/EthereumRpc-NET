@@ -60,6 +60,8 @@
     <Compile Include="Ethereum\Block.cs" />
     <Compile Include="Ethereum\Filter.cs" />
     <Compile Include="Ethereum\Log.cs" />
+    <Compile Include="Ethereum\Whisper.cs" />
+    <Compile Include="Ethereum\Work.cs" />
     <Compile Include="RpcObjects\Transaction.cs" />
     <Compile Include="Service\EthereumService.cs" />
     <Compile Include="MethodExtension.cs" />

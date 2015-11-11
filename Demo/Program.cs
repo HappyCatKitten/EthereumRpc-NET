@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using EthereumRpc;
+using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
 
 namespace Demo
@@ -90,15 +91,28 @@ namespace Demo
             //Console.WriteLine(ethereumService.CompileLLL()); //not yet implemented
             //Console.WriteLine(ethereumService.CompileSerpent()); //not yet implemented
 
+            //var filter = ethereumService.NewFilter(exampleAddress);
+            //Console.WriteLine(filter);
+            //var blockFilter = ethereumService.NewBlockFilter();
+            //Console.WriteLine(blockFilter);
+            //var newPendingTransactionFilter = ethereumService.NewPendingTransactionFilter();
+            //Console.WriteLine(newPendingTransactionFilter);
 
-            //Console.WriteLine(ethereumService.NewFilter(exampleAddress));
-            //Console.WriteLine(ethereumService.NewBlockFilter());
-            //Console.WriteLine(ethereumService.NewPendingTransactionFilter());
-            //Console.WriteLine(ethereumService.UninstallFilter("0x3"));
+            //ethereumService.GetFilterChanges(blockFilter).ToList().ForEach(i => Console.Write(@"[{0}] ", i)); // return the right objects
+            //ethereumService.GetFilterLogs(blockFilter).ToList().ForEach(i => Console.Write(@"[{0}] ", i)); // return the right objects
 
-            //ethereumService.GetFilterChanges("0x3").ToList().ForEach(i => Console.Write(@"[{0}] ", i)); //not return logs - [0]
-            //ethereumService.GetFilterLogs("0x3").ToList().ForEach(i => Console.Write(@"[{0}] ", i));  //not return logs - [0]
+            //var uninstallFilter = ethereumService.UninstallFilter(filter);
+            //Console.WriteLine(uninstallFilter);
 
+            // Console.WriteLine(ethereumService.GetLogs(new Log())); // not working
+
+            //Console.WriteLine(ethereumService.GetWork());
+            //Console.WriteLine(ethereumService.SubmitWork("0x0000000000000001","0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", "0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000")); // errors probably due to parameters passed
+            //Console.WriteLine(ethereumService.SubmitHashrate("0x0000000000000000000000000000000000000000000000000000000000500000","0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c")); // return null. probably bad parameters
+
+            //Console.WriteLine(ethereumService.ShhVersion());
+            
+            Console.WriteLine(ethereumService.ShhPost(null, null, null, null, null, null));
 
             Console.ReadLine();
         }
