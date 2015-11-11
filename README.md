@@ -28,8 +28,8 @@ Supported RPC calls
 - eth_getUncleCountByBlockNumber
 - eth_getCode
 - eth_sign
-- eth_sendTransaction - *unfinsihed*
-- eth_sendRawTransaction - *unfinsihed*
+- eth_sendTransaction - **unfinsihed**
+- eth_sendRawTransaction - **unfinsihed**
 - eth_call - unfinsihed
 - eth_estimateGas
 - eth_getBlockByHash
