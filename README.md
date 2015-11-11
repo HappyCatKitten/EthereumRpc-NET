@@ -89,3 +89,7 @@ Roadmap
 - All RPC calls implemented - December 1st
 - Address Parser - December 1st
 - Hashing functions - December 1st
+- 
+Support
+
+lawrence@9thirteencreative.com
