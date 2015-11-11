@@ -28,9 +28,9 @@ Supported RPC calls
 - eth_getUncleCountByBlockNumber
 - eth_getCode
 - eth_sign
-- eth_sendTransaction
-- eth_sendRawTransaction
-- eth_call
+- eth_sendTransaction - unfinsihed
+- eth_sendRawTransaction - unfinsihed
+- eth_call - unfinsihed
 - eth_estimateGas
 - eth_getBlockByHash
 - eth_getBlockByNumber
@@ -38,8 +38,8 @@ Supported RPC calls
 - eth_getTransactionByBlockHashAndIndex
 - eth_getTransactionByBlockNumberAndIndex
 - eth_getTransactionReceipt
-- eth_getUncleByBlockHashAndIndex
-- eth_getUncleByBlockNumberAndIndex
+- eth_getUncleByBlockHashAndIndex - untested
+- eth_getUncleByBlockNumberAndIndex - untested
 - eth_getCompilers
 - eth_compileLLL
 - eth_compileSolidity
@@ -48,12 +48,12 @@ Supported RPC calls
 - eth_newBlockFilter
 - eth_newPendingTransactionFilter
 - eth_uninstallFilter
-- eth_getFilterChanges
-- eth_getFilterLogs
+- eth_getFilterChanges - untested
+- eth_getFilterLogs - untested
 - eth_getLogs
 - eth_getWork
-- eth_submitWork
-- eth_submitHashrate
+- eth_submitWork - untested
+- eth_submitHashrate - untested
 - shh_version
 
 Roadmap
