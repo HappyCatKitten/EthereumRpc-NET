@@ -61,27 +61,27 @@ Supported RPC calls
 Configuration
 -------------
 
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-
-	<appSettings>
-		<add key="EthereumRpcUrl" value="http://localhost"/>
-		<add key="EthereumRpcPort" value="8545"/>
-	</appSettings>
-			
-</configuration>
+	<?xml version="1.0" encoding="utf-8"?>
+	<configuration>
+	
+		<appSettings>
+			<add key="EthereumRpcUrl" value="http://localhost"/>
+			<add key="EthereumRpcPort" value="8545"/>
+		</appSettings>
+				
+	</configuration>
 	
 	
 Getting started
 --------
 
-var connectionOptions = new ConnectionOptions()
-{
-	Port = "8545",
-	Url = "http://localhost"
-};
-
-var ethereumService = new EthereumService(connectionOptions);
+	var connectionOptions = new ConnectionOptions()
+	{
+		Port = "8545",
+		Url = "http://localhost"
+	};
+	
+	var ethereumService = new EthereumService(connectionOptions);
 
 Roadmap
 --------
