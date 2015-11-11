@@ -3,6 +3,8 @@
 
 **C# .NET wrapper for Ethereum RPC client**
 
+Notes: Shh protocol is partially implemented and db_putString, db_getString, db_putHex, db_getHex have been deprecitated
+
 Supported RPC calls
 --------
 
