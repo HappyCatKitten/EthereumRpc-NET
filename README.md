@@ -54,8 +54,8 @@ Supported RPC calls
 - eth_getFilterLogs - **untested**
 - eth_getLogs
 - eth_getWork
-- eth_submitWork -**untested**
-- eth_submitHashrate -**untested**
+- eth_submitWork
+- eth_submitHashrate
 - shh_version
 
 Configuration
