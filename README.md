@@ -58,6 +58,23 @@ Supported RPC calls
 - eth_submitHashrate -**untested**
 - shh_version
 
+Configuration
+-------------
+
+	'<?xml version="1.0" encoding="utf-8"?>
+	<configuration>
+
+    <appSettings>
+      <add key="EthereumRpcUrl" value="http://localhost"/>
+      <add key="EthereumRpcPort" value="8545"/>
+    </appSettings>
+			
+	</configuration>
+
+
+
+
+
 Roadmap
 --------
 
