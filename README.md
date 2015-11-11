@@ -5,6 +5,16 @@
 
 Notes: Shh protocol is partially implemented and db_putString, db_getString, db_putHex, db_getHex have been deprecitated
 
+Objects
+--------
+
+- Address
+- Block
+- Filter
+- Log
+- Whisper
+- Work
+
 Supported RPC calls
 --------
 
