@@ -33,10 +33,10 @@ namespace EthereumRpc.Ethereum
         [JsonProperty(PropertyName = "topics", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] Topics { get; set; }
 
-        public Filter(string fromBlock = null, string toBlock = null, string address = null, string[] topics = null)
+        public Filter(string fromBlock = null, string toBlock = null,BlockTag from = BlockTag.Earliest, BlockTag to = BlockTag.Pending, string address = null, string[] topics = null)
         {
-            FromBlock = fromBlock ?? "latest";
-            ToBlock = toBlock ?? "latest"; ;
+            FromBlock = fromBlock ?? from.ToJsonMethodName();
+            ToBlock = toBlock ?? to.ToJsonMethodName();
             Address = address;
             Topics = topics;
         }

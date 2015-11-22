@@ -34,6 +34,27 @@ namespace System
             return string.Format("0x{0}", value.ToString("X").ToLower());
         }
 
+        public static string ToHexString(this BigInteger value)
+        {
+            return string.Format("0x{0}", value.ToString("X").ToLower());
+        }
+
+        public static string WeiToEther(this BigInteger value)
+        {
+            var divRem1 = BigInteger.Zero;
+            var bal = BigInteger.DivRem(value, 1000000000000000000, out divRem1);
+            var balanceString = string.Format("{0}.{1}", bal, divRem1);
+            return balanceString;
+        }
+
+
+        public static string ToHexString(this string value)
+        {
+            var result = string.Format("0x{0}", value.ToBigInteger().ToString("X").ToLower());
+
+            return result;
+        }
+
         public static int HexToInt(this string value)
         {
             if (value.Length == 2)
@@ -45,9 +66,10 @@ namespace System
         }
 
 
-        public static BigInteger ToBigInteger(this string value)
+        public static BigInteger ToBigInteger(this string value, Globalization.NumberStyles numberStyles = Globalization.NumberStyles.HexNumber)
         {
-            var bigInteger = BigInteger.Parse(value.Substring(2), Globalization.NumberStyles.HexNumber);
+            value = numberStyles == Globalization.NumberStyles.HexNumber ? value.Substring(2) : value;
+            var bigInteger = BigInteger.Parse(value, numberStyles);
             return bigInteger;
         }
 

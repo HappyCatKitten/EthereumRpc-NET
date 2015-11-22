@@ -9,7 +9,7 @@ namespace EthereumRpc
 {
     public enum BlockTag
     {
-        [Description("quanitiy")]
+        [Description("quantity")]
         Quantity,
         [Description("latest")]
         Latest,
@@ -17,5 +17,24 @@ namespace EthereumRpc
         Earliest,
         [Description("pending")]
         Pending
+    }
+
+    public enum EtherUnit
+    {
+        [Description("Wei")]
+        Wei,
+        [Description("Kwei")]
+        Kwei,
+        [Description("Mwei")]
+        Mwei,
+        [Description("Gwei")]
+        Gwei,
+        [Description("Szabo")]
+        Szabo,
+        [Description("Finney")]
+        Finney,
+        [Description("Ether")]
+        Ether,
+
     }
 }

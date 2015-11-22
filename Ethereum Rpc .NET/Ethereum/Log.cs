@@ -62,5 +62,16 @@ namespace EthereumRpc.Ethereum
         /// </summary>
         //[JsonProperty(PropertyName = "topics", Order = 0, DefaultValueHandling = DefaultValueHandling.Ignore)]
         //public string Topics { get; set; }
+
+        public Log(dynamic value)
+        {
+            Address = value.address;
+            Data = value.data;
+            BlockNumber = value.blockNumber;
+            BlockHash = value.blockHash;
+            LogIndex = value.logIndex;
+            TransactionHash = value.transactionHash;
+            TransactionIndex = value.transactionIndex;
+        }
     }
 }

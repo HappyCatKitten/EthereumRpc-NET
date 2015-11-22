@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Numerics;
 using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
+using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 
 namespace EthereumRpc
@@ -645,9 +646,14 @@ namespace EthereumRpc
             return compilerList.ToArray();
         }
 
-        public string CompileSolidity()
+        public string CompileSolidity(string contract)
         {
-            throw new Exception("not yet implemented");
+            var rpcRequest = new RpcRequest(RpcMethod.eth_compileSolidity);
+
+            rpcRequest.AddParam(contract);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            return rpcResult.Result;
         }
 
         public string CompileLLL()
@@ -668,11 +674,10 @@ namespace EthereumRpc
         /// <param name="address"></param>
         /// <param name="topics"></param>
         /// <returns></returns>
-        public string NewFilter(string fromBlock = null, string toBlock = null, string address = null, string[] topics = null)
+        public string NewFilter(Filter filter)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_newFilter);
             
-            var filter = new Filter(fromBlock, toBlock, address, topics);
             rpcRequest.AddParam(filter);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
 
@@ -701,15 +706,17 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
-        public string[] GetFilterChanges(string filterId)
+        public Log[] GetFilterChanges(string filterId)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterChanges);
             rpcRequest.AddParam(filterId);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
-            var list = new List<string>();
+            var list = new List<Log>();
             foreach (var account in rpcResult.Result)
             {
-                list.Add(account.Value);
+                var log = new Log(account);
+     
+                list.Add(log);
             }
             return list.ToArray();
         }
@@ -813,6 +820,24 @@ namespace EthereumRpc
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
             return rpcResult.Result;
         }
+
+        public string NewAccount(string password)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.personal_newAccount);
+            rpcRequest.AddParam(password);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
+
+        public bool UnlockAccount(string account, string password)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.personal_unlockAccount);
+            rpcRequest.AddParam(account);
+            rpcRequest.AddParam(password);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            return rpcResult.Result;
+        }
+
 
 
         public string ShhPost(string from, string to, string[] topics, string payload, string priority, string ttl)

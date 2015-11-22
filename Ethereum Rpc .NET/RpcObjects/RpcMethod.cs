@@ -133,6 +133,9 @@ namespace EthereumRpc
         shh_getFilterChanges,
         [Description("shh_getMessages")]
         shh_getMessages,
-        
+        [Description("personal_newAccount")]
+        personal_newAccount,
+        [Description("personal_unlockAccount")]
+        personal_unlockAccount
     }
 }

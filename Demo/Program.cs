@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using EthereumRpc;
 using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
+using EthereumRpc.Service;
 
 namespace Demo
 {
@@ -58,11 +59,24 @@ namespace Demo
             //Console.WriteLine(ethereumService.GetHashrate());
             //Console.WriteLine(ethereumService.GetGasPrice());
             //ethereumService.GetAccounts().ToList().ForEach(i => Console.Write(@"[{0}] ", i));
+
+            var accounts = ethereumService.GetAccounts();
+
+            foreach (var account in accounts)
+            {
+                var balance = ethereumService.GetBalance(account, BlockTag.Latest);
+                Console.WriteLine("account :" + EtherCurrencyConverter.Convert(balance));
+
+                var sign = ethereumService.Sign(account, "School bus");
+
+                Console.WriteLine("sign : " + sign);
+            }
+
             //Console.WriteLine(ethereumService.GetBlockNumber());
             //Console.WriteLine(ethereumService.GetBalance(exampleAddress, BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetStorageAt(exampleAddress, 100, BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetTransactionCount(exampleAddress, BlockTag.Latest));
-            //Console.WriteLine(ethereumService.GetBlockTransactionCountByHash(exampleBlockHash)); 
+            //Console.WriteLine(ethereumService.GetBlockTransactionCountByHash(exampleBlockHash));
             //Console.WriteLine(ethereumService.GetBlockTransactionCountByNumber(BlockTag.Latest));
             //Console.WriteLine(ethereumService.GetUncleCountByBlockHash(exampleBlockHash));
             //Console.WriteLine(ethereumService.GetUncleCountByBlockNumber(10));
@@ -87,7 +101,10 @@ namespace Demo
 
             //ethereumService.GetCompilers().ToList().ForEach(i => Console.Write(@"[{0}] ", i));
 
-            //Console.WriteLine(ethereumService.CompileSolidity()); //not yet implemented
+            //var contract = @"contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
+
+
+            //Console.WriteLine(ethereumService.CompileSolidity(contract)); //not working
             //Console.WriteLine(ethereumService.CompileLLL()); //not yet implemented
             //Console.WriteLine(ethereumService.CompileSerpent()); //not yet implemented
 
@@ -111,8 +128,8 @@ namespace Demo
             //Console.WriteLine(ethereumService.SubmitHashrate("0x0000000000000000000000000000000000000000000000000000000000500000","0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c")); // return null. probably bad parameters
 
             //Console.WriteLine(ethereumService.ShhVersion());
-            
-            Console.WriteLine(ethereumService.ShhPost(null, null, null, null, null, null));
+
+            //Console.WriteLine(ethereumService.ShhPost(null, null, null, null, null, null));
 
             Console.ReadLine();
         }
