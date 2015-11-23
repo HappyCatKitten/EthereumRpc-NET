@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{85AAC59C-F998-469C-8510-58E718F74EEC}</ProjectGuid>
+    <ProjectGuid>{2EA22F05-F23F-4F96-BCF0-4B3CB4200446}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ethereum.Wallet</RootNamespace>
-    <AssemblyName>Ethereum Windows Wallet</AssemblyName>
+    <RootNamespace>Block_Studio</RootNamespace>
+    <AssemblyName>Block Studio</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,26 +46,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomControls\ConnectionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ConnectionPanel.Designer.cs">
+      <DependentUpon>ConnectionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FrmNewConnection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FrmNewConnection.Designer.cs">
+      <DependentUpon>FrmNewConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmUnlock.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmUnlock.Designer.cs">
-      <DependentUpon>FrmUnlock.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Persistant\FileSerialize.cs" />
+    <Compile Include="Persistant\PersistantState.cs" />
     <Compile Include="Persistant\SavedConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tabs\Tab.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tabs\TabManager.cs" />
+    <Compile Include="TreeNodes\BaseTreeNode.cs" />
+    <Compile Include="TreeNodes\ConnectionNode.cs" />
+    <Compile Include="TreeNodes\NewConnectionNode.cs" />
+    <Compile Include="TreeNodes\TreeNodeManager.cs" />
+    <EmbeddedResource Include="CustomControls\ConnectionPanel.resx">
+      <DependentUpon>ConnectionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FrmNewConnection.resx">
+      <DependentUpon>FrmNewConnection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmUnlock.resx">
-      <DependentUpon>FrmUnlock.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -76,7 +95,6 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Text;
 using System.Threading.Tasks;
 using EthereumRpc;
@@ -15,8 +17,25 @@ namespace Demo
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+
+            var ipc = @"\\.\pipe\geth.ipc";
+
+            IpcChannel ipcCh = new IpcChannel(ipc);
+
+            
+
+
+
+
+
+
+
+
+
+
             var liveConnection = new ConnectionOptions()
             {
                 Port = "8545",
