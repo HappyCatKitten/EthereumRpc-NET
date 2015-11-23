@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Block_Studio.Persistant;
+using BlockStudio.Persistant;
 using Ethereum.Wallet.Persistant;
 using EthereumRpc;
 
-namespace Block_Studio.Dialogs
+namespace BlockStudio.Dialogs
 {
     public partial class FrmNewConnection : Form
     {
@@ -29,8 +29,8 @@ namespace Block_Studio.Dialogs
 
         private void TestConnection()
         {
-            var url = txtUrl.Text;
-            var port = txtPort.Text;
+            var url = txtAttachUrl.Text;
+            var port = txtAttachPort.Text;
             var ethereumService = new EthereumService(url, port);
 
             try
@@ -53,8 +53,8 @@ namespace Block_Studio.Dialogs
         private void btnSave_Click(object sender, EventArgs e)
         {
             var savedConnection = new SavedConnection();
-            savedConnection.Port = txtPort.Text;
-            savedConnection.Url = txtUrl.Text;
+            savedConnection.Port = txtAttachPort.Text;
+            savedConnection.Url = txtAttachUrl.Text;
             savedConnection.Name = txtName.Text;
             savedConnection.Uid = Guid.NewGuid().ToString();
             PersistantState.AddSavedConnection(savedConnection);
@@ -65,6 +65,37 @@ namespace Block_Studio.Dialogs
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void rbAttach_CheckedChanged(object sender, EventArgs e)
+        {
+            var rb = (RadioButton) sender;
+
+            if (rb.Checked)
+            {
+                rbCreateInstance.Checked = false;
+                rbAttach.Checked = true;
+                txtAttachPort.Enabled = true;
+                txtAttachUrl.Enabled = true;
+
+                txtNewInstancePort.Enabled = false;
+            }
+        }
+
+
+        private void rbCreateInstance_CheckedChanged(object sender, EventArgs e)
+        {
+            var rb = (RadioButton)sender;
+
+            if (rb.Checked)
+            {
+                rbCreateInstance.Checked = true;
+                txtAttachPort.Enabled = false;
+                rbAttach.Checked = false;
+                txtAttachUrl.Enabled = false;
+
+                txtNewInstancePort.Enabled = true;
+            }
         }
     }
 }

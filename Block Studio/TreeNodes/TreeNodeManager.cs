@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ethereum.Wallet.Persistant;
 
-namespace Block_Studio.TreeNodes
+namespace BlockStudio.TreeNodes
 {
     public class TreeNodeManager
     {

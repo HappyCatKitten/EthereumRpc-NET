@@ -21,6 +21,11 @@ namespace EthereumRpc.RpcObjects
 
         public bool IsSyncing { get; set; }
 
+        public SyncStatus()
+        {
+            
+        }
+
         public override string ToString()
         {
             var toString = string.Empty;

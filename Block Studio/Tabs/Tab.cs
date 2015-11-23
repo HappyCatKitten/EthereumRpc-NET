@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Block_Studio.CustomControls;
+using BlockStudio.CustomControls;
 using Ethereum.Wallet.Persistant;
 
-namespace Block_Studio.Tabs
+namespace BlockStudio.Tabs
 {
     public class Tab : TabPage
     {

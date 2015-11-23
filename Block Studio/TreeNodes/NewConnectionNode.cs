@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Block_Studio.TreeNodes
+namespace BlockStudio.TreeNodes
 {
     public class NewConnectionNode : BaseTreeNode
     {
         public NewConnectionNode()
         {
             NodeType = NodeType.NewConnection;
-            this.Text = "New Connection";
-            this.ImageIndex = 0;
-            this.SelectedImageIndex = 0;
+            Text = "Add Connection";
+            ImageIndex = 0;
+            SelectedImageIndex = 0;
         }
     }
 }

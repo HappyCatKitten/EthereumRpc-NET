@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Block_Studio.Dialogs;
-using Block_Studio.Persistant;
-using Block_Studio.Tabs;
-using Block_Studio.TreeNodes;
+using BlockStudio.Dialogs;
+using BlockStudio.Persistant;
+using BlockStudio.Tabs;
+using BlockStudio.TreeNodes;
 using Ethereum.Wallet.Persistant;
 
-namespace Block_Studio
+namespace BlockStudio
 {
     public partial class Form1 : Form
     {
@@ -54,26 +54,19 @@ namespace Block_Studio
             {
                 tvConnections.SelectedNode = baseTreeNode;
                 TvConnectionsRightClick(baseTreeNode);
-
-                // iterate through all the tab pages
-                //for (int i = 0; i < tabControl1.TabCount; i++)
-                //{
-                //    // get their rectangle area and check if it contains the mouse cursor
-                //    Rectangle r = tabControl1.GetTabRect(i);
-                //    if (r.Contains(e.Location))
-                //    {
-                //        // show the context menu here
-                //        System.Diagnostics.Debug.WriteLine("TabPressed: " + i);
-                //    }
-                //}
             }
         }
 
         private void TvConnectionsRightClick(BaseTreeNode baseTreeNode)
         {
-            var contextMenuStrip =  new ContextMenuStrip();
-            contextMenuStrip.Items.Add("fuck you");
-            tvConnections.ContextMenuStrip = contextMenuStrip;
+            if (baseTreeNode.NodeType == NodeType.NewConnection)
+            {
+
+            }
+            else if (baseTreeNode.NodeType == NodeType.Connection)
+            {
+                tvConnections.ContextMenuStrip = ConnectionNodeContextMenu;
+            }
 
         }
 
@@ -98,6 +91,27 @@ namespace Block_Studio
         {
             TabManager.AddConnectionTabIfNew(savedConnection);
             TabManager.SetSelectedTab(savedConnection);
+        }
+
+        private void renameConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to delete this connection", "Block Studio",
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                var selectedNode = (ConnectionNode)tvConnections.SelectedNode;
+                var savedConnection = selectedNode.SavedConnection;
+                PersistantState.RemoveSavedConnection(savedConnection);
+                tvConnections.SelectedNode = null;
+                tvConnections.Nodes.Remove(selectedNode);
+            }
+
         }
     }
 }

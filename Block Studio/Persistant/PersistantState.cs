@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ethereum.Wallet.Persistant;
 
-namespace Block_Studio.Persistant
+namespace BlockStudio.Persistant
 {
     public class PersistantState
     {

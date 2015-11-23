@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Block_Studio.TreeNodes
+namespace BlockStudio.TreeNodes
 {
     public class BaseTreeNode : TreeNode
     {
-
         public NodeType NodeType { get; set; }
+
+        public BaseTreeNode()
+        {
+           
+        }
     }
 }

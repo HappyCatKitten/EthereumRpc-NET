@@ -120,10 +120,12 @@ namespace EthereumRpc
             var rpcRequest = new RpcRequest(RpcMethod.eth_syncing);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
             
-            if (rpcResult.Result.GetType()!=typeof(Boolean))
+            if (rpcResult.Result.GetType().FullName != "System.Boolean")
             {
-                var syncStatus = JsonConvert.DeserializeObject<SyncStatus>(rpcResult.Result);
-                
+                var json = JsonConvert.SerializeObject(rpcResult.Result);
+                SyncStatus syncStatus = JsonConvert.DeserializeObject<SyncStatus>(json);
+                syncStatus.IsSyncing = true;
+
                 return syncStatus;
             }
 
