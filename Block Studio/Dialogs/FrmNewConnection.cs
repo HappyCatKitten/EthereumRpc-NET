@@ -7,19 +7,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BlockStudio.CustomControls;
+using BlockStudio.Ethereum;
 using BlockStudio.Persistant;
-using Ethereum.Wallet.Persistant;
 using EthereumRpc;
 
 namespace BlockStudio.Dialogs
 {
     public partial class FrmNewConnection : Form
     {
-        public FrmNewConnection()
+        public Connection Connection { get; set; }
+        public FrmNewConnection(Connection connection = null)
         {
             InitializeComponent();
 
-            txtName.Text = string.Format("Ethereum Connection {0}", PersistantState.SavedConnections.Count + 1);
+            if (connection == null)
+            {
+                Connection = new Connection();
+                Connection.Uid = Guid.NewGuid().ToString();
+                txtName.Text = string.Format("Ethereum Connection {0}", PersistantState.SavedConnections.Count + 1);
+                txtPrivateChainPath.Text = string.Format("{0}{1}", GethService.ExecutingFolder, txtName.Text);
+                rbAttach.PerformClick();
+            }
+            else
+            {
+                Connection = connection;
+
+                txtAttachPort.Text = Connection.Port;
+                txtAttachUrl.Text = Connection.Url;
+                txtName.Text = Connection.Name;
+                txtPrivateChainPath.Text = connection.PrivateChainPath;
+                chbPrivateChain.Checked = connection.PrivateChain;
+
+                if (connection.ConnectionType == ConnectionType.Attach)
+                {
+                    rbAttach.PerformClick();
+                }
+                if (connection.ConnectionType == ConnectionType.Instance)
+                {
+                    rbCreateInstance.PerformClick();
+                }
+            }  
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -36,11 +64,11 @@ namespace BlockStudio.Dialogs
             try
             {
                 var version = ethereumService.GetWeb3ClientVersion();
-                var result = MessageBox.Show("Connection Successful", "Block Studio", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1);
+                var result = MessageBoxEx.Show(this,"Connection Successful", "Block Studio", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1);
             }
             catch (Exception)
             {
-                var result = MessageBox.Show("Could not connect", "Block Studio", MessageBoxButtons.RetryCancel,
+                var result = MessageBoxEx.Show(this,"Could not connect", "Block Studio", MessageBoxButtons.RetryCancel,
                     MessageBoxIcon.Error);
 
                 if (result == DialogResult.Retry)
@@ -52,14 +80,24 @@ namespace BlockStudio.Dialogs
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var savedConnection = new SavedConnection();
-            savedConnection.Port = txtAttachPort.Text;
-            savedConnection.Url = txtAttachUrl.Text;
-            savedConnection.Name = txtName.Text;
-            savedConnection.Uid = Guid.NewGuid().ToString();
-            PersistantState.AddSavedConnection(savedConnection);
-            this.Close();
+            Connection.Name = txtName.Text;
 
+            if (rbAttach.Checked)
+            {
+                Connection.Port = txtAttachPort.Text;
+                Connection.Url = txtAttachUrl.Text;
+                Connection.ConnectionType = ConnectionType.Attach;
+            }
+            else if (rbCreateInstance.Checked)
+            {
+                Connection.Port = txtNewInstancePort.Text;
+                Connection.PrivateChain = chbPrivateChain.Checked;
+                Connection.PrivateChainPath = txtPrivateChainPath.Text;
+                Connection.ConnectionType = ConnectionType.Instance;
+            }
+            
+            PersistantState.SavedConnection(Connection);
+            this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -95,6 +133,24 @@ namespace BlockStudio.Dialogs
                 txtAttachUrl.Enabled = false;
 
                 txtNewInstancePort.Enabled = true;
+            }
+        }
+
+        private void chbPrivateChain_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPrivateChainPath.Enabled = chbPrivateChain.Checked;
+        }
+
+        private void btnPrivateChainPathGet_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            dialog.RootFolder = Environment.SpecialFolder.Desktop;
+            dialog.SelectedPath = string.Format("{0}{1}", GethService.ExecutingFolder, txtName);
+            dialog.Description = @"Select Folder for private blockchain files";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                txtPrivateChainPath.Text = dialog.SelectedPath;
             }
         }
     }

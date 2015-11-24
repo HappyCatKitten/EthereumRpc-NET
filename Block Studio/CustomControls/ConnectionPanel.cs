@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BlockStudio.Dialogs;
 using BlockStudio.Ethereum;
-using Ethereum.Wallet.Persistant;
+using BlockStudio.Html;
+using BlockStudio.Persistant;
 using EthereumRpc;
 using EthereumRpc.RpcObjects;
 
@@ -17,16 +19,24 @@ namespace BlockStudio.CustomControls
 {
     public partial class ConnectionPanel : UserControl
     {
-        public SavedConnection SavedConnection{ get; set; }
-        public EthereumService EthereumService { get; set; }
+        public Connection Connection{ get; set; }
+
         private bool _isSyncing = false;
 
-        public ConnectionPanel(SavedConnection savedConnection)
+        public ConnectionPanel(Connection connection)
         {
-            SavedConnection = savedConnection;
-            EthereumService = new EthereumService(SavedConnection.Url,SavedConnection.Port);
+            Connection = connection;
+            
 
             InitializeComponent();
+
+
+            WebBrowserSettings.Mute();
+
+            var browserScriptInterface = new BrowserScriptInterface();
+            browserScriptInterface.WebBrowser = webBrowser1;
+            browserScriptInterface.EthereumService = Connection.EthereumService;
+            webBrowser1.ObjectForScripting = browserScriptInterface;
 
             BackgroundWorker bgWorker = new BackgroundWorker();
             bgWorker.DoWork += BgWorker_DoWork;
@@ -40,7 +50,7 @@ namespace BlockStudio.CustomControls
                 SyncStatus syncStatus = null;
                 try
                 {
-                    syncStatus = EthereumService.GetSyncing();
+                    syncStatus = Connection.EthereumService.GetSyncing();
                 }
                 catch (Exception)
                 {
@@ -105,19 +115,19 @@ namespace BlockStudio.CustomControls
 
             try
             {
-                var block = EthereumService.GetBlockByHash(value, false);
-                txtResults.Text = block.Hash;
+                var block = Connection.EthereumService.GetBlockByHash(value, true);
+                webBrowser1.DocumentText = HtmlService.BlockHtml(block);
                 return;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-
+               
             }
 
             try
             {
-                var tx = EthereumService.GetTransactionByHash(value);
-                txtResults.Text = tx.Hash;
+                var tx = Connection.EthereumService.GetTransactionByHash(value);
+                webBrowser1.DocumentText = HtmlService.TransactionHtml(tx);
             }
             catch (Exception)
             {
@@ -125,12 +135,11 @@ namespace BlockStudio.CustomControls
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnNewAccount_Click(object sender, EventArgs e)
         {
-            GethService.RunGethInstance(new SavedConnection() {Port = "8555"});
+            var frmAccountPassword = new FrmAccountPassword(Connection);
+            frmAccountPassword.ShowDialog();
 
         }
-
-
     }
 }

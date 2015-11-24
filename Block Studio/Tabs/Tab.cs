@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BlockStudio.CustomControls;
-using Ethereum.Wallet.Persistant;
+using BlockStudio.Persistant;
 
 namespace BlockStudio.Tabs
 {
     public class Tab : TabPage
     {
-        public SavedConnection SavedConnection { get; set; }
+        public Connection Connection { get; set; }
         public ConnectionPanel ConnectionPanel{ get; set; }
 
-        public Tab(SavedConnection savedConnection)
+        public Tab(Connection connection)
         {
-            SavedConnection = savedConnection;
+            Connection = connection;
 
-            ConnectionPanel = new ConnectionPanel(savedConnection);
+            ConnectionPanel = new ConnectionPanel(connection);
             ConnectionPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
             ConnectionPanel.BorderStyle = BorderStyle.FixedSingle;
             ConnectionPanel.Width = this.Width;

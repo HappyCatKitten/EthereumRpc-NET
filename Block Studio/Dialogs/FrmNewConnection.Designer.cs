@@ -45,6 +45,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.txtPrivateChainPath = new System.Windows.Forms.TextBox();
+            this.chbPrivateChain = new System.Windows.Forms.CheckBox();
+            this.btnPrivateChainPathGet = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.gbAttach.SuspendLayout();
             this.gbNewInstance.SuspendLayout();
@@ -152,6 +155,7 @@
             // rbAttach
             // 
             this.rbAttach.AutoSize = true;
+            this.rbAttach.Checked = true;
             this.rbAttach.Location = new System.Drawing.Point(9, 16);
             this.rbAttach.Name = "rbAttach";
             this.rbAttach.Size = new System.Drawing.Size(69, 21);
@@ -163,12 +167,15 @@
             // 
             // gbNewInstance
             // 
+            this.gbNewInstance.Controls.Add(this.btnPrivateChainPathGet);
+            this.gbNewInstance.Controls.Add(this.chbPrivateChain);
+            this.gbNewInstance.Controls.Add(this.txtPrivateChainPath);
             this.gbNewInstance.Controls.Add(this.rbCreateInstance);
             this.gbNewInstance.Controls.Add(this.txtNewInstancePort);
             this.gbNewInstance.Controls.Add(this.label6);
             this.gbNewInstance.Location = new System.Drawing.Point(12, 283);
             this.gbNewInstance.Name = "gbNewInstance";
-            this.gbNewInstance.Size = new System.Drawing.Size(472, 107);
+            this.gbNewInstance.Size = new System.Drawing.Size(472, 150);
             this.gbNewInstance.TabIndex = 12;
             this.gbNewInstance.TabStop = false;
             // 
@@ -218,6 +225,34 @@
             this.txtName.TabIndex = 13;
             this.txtName.Text = "New Connection";
             // 
+            // txtPrivateChainPath
+            // 
+            this.txtPrivateChainPath.Location = new System.Drawing.Point(15, 115);
+            this.txtPrivateChainPath.Name = "txtPrivateChainPath";
+            this.txtPrivateChainPath.Size = new System.Drawing.Size(400, 22);
+            this.txtPrivateChainPath.TabIndex = 11;
+            // 
+            // chbPrivateChain
+            // 
+            this.chbPrivateChain.AutoSize = true;
+            this.chbPrivateChain.Location = new System.Drawing.Point(17, 88);
+            this.chbPrivateChain.Name = "chbPrivateChain";
+            this.chbPrivateChain.Size = new System.Drawing.Size(112, 21);
+            this.chbPrivateChain.TabIndex = 13;
+            this.chbPrivateChain.Text = "Private chain";
+            this.chbPrivateChain.UseVisualStyleBackColor = true;
+            this.chbPrivateChain.CheckedChanged += new System.EventHandler(this.chbPrivateChain_CheckedChanged);
+            // 
+            // btnPrivateChainPathGet
+            // 
+            this.btnPrivateChainPathGet.Location = new System.Drawing.Point(419, 113);
+            this.btnPrivateChainPathGet.Name = "btnPrivateChainPathGet";
+            this.btnPrivateChainPathGet.Size = new System.Drawing.Size(47, 24);
+            this.btnPrivateChainPathGet.TabIndex = 14;
+            this.btnPrivateChainPathGet.Text = "...";
+            this.btnPrivateChainPathGet.UseVisualStyleBackColor = true;
+            this.btnPrivateChainPathGet.Click += new System.EventHandler(this.btnPrivateChainPathGet_Click);
+            // 
             // FrmNewConnection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -266,5 +301,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Button btnPrivateChainPathGet;
+        private System.Windows.Forms.CheckBox chbPrivateChain;
+        private System.Windows.Forms.TextBox txtPrivateChainPath;
     }
 }

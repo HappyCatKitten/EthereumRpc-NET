@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BlockStudio.TreeNodes;
-using Ethereum.Wallet.Persistant;
+using BlockStudio.Persistant;
 
 namespace BlockStudio.Tabs
 {
@@ -20,22 +19,22 @@ namespace BlockStudio.Tabs
             return tabs;
         }
 
-        public static void SetSelectedTab(SavedConnection savedConnection)
+        public static void SetSelectedTab(Connection connection)
         {
             var tabs = TabControl.TabPages.Cast<Tab>().ToList();
-            var tab = tabs.FirstOrDefault(x => x.SavedConnection.Uid == savedConnection.Uid);
+            var tab = tabs.FirstOrDefault(x => x.Connection.Uid == connection.Uid);
             TabControl.SelectTab(tab);
         }
 
-        public static void AddConnectionTabIfNew(SavedConnection savedConnection)
+        public static void AddConnectionTabIfNew(Connection connection)
         {
             var connectionTabs = GetConnectionTabs();
 
-            if (connectionTabs.All(x => x.SavedConnection.Uid != savedConnection.Uid))
+            if (connectionTabs.All(x => x.Connection.Uid != connection.Uid))
             {
-                var tab = new Tab(savedConnection);
+                var tab = new Tab(connection);
 
-                tab.Text = savedConnection.Name;
+                tab.Text = connection.Name;
                 TabControl.TabPages.Add(tab);
             }
         }

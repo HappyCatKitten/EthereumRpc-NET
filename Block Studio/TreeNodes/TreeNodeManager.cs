@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ethereum.Wallet.Persistant;
+using BlockStudio.Persistant;
 
 namespace BlockStudio.TreeNodes
 {
@@ -17,30 +17,63 @@ namespace BlockStudio.TreeNodes
             return list.Cast<ConnectionNode>().ToList();
         }
 
-        public static ConnectionNode GetConnectionNodeBySavedConnection(SavedConnection savedConnection)
+        public static void UpdateConnectionNodes()
         {
-            var list = TreeView.Nodes.Cast<BaseTreeNode>().Where(x => x.NodeType == NodeType.Connection).ToList();
-            var connectionNodes = list.Cast<ConnectionNode>().ToList();
-            return connectionNodes.FirstOrDefault(x => x.SavedConnection.Uid == savedConnection.Uid);
-        }
-
-        public static void AddConnectionNodeIfNew(SavedConnection savedConnection)
-        {
-            var currentConnections = GetConnectionNodes();
-
-            if (currentConnections.All(x => x.SavedConnection.Uid != savedConnection.Uid))
+            var connectionNodes = GetConnectionNodes();
+            foreach (var treeNode in connectionNodes)
             {
-                var connectionNode = new ConnectionNode();
-                connectionNode.Text = savedConnection.Name;
-                connectionNode.SavedConnection = savedConnection;
-                TreeView.Nodes.Insert(TreeView.Nodes.Count, connectionNode);
-                TreeView.SelectedNode = connectionNode;
+               treeNode.Connection = PersistantState.SavedConnections.FirstOrDefault(x => x.Uid == treeNode.Connection.Uid);
+               treeNode.Text = treeNode.Connection.Name; 
             }
         }
 
-        public static void SetConnectionNodeAsSelected(SavedConnection savedConnection)
+        public static void ExpandConnectionProperties(ConnectionNode connectionNode)
         {
-            var node = GetConnectionNodeBySavedConnection(savedConnection);
+            var accounts = connectionNode.Connection.Accounts;
+            connectionNode.Nodes[0].Nodes.Clear();
+
+            foreach (var account in accounts)
+            {
+                var accountNode = new AccountNode();
+                accountNode.Text = account.AccountId;
+                accountNode.ImageIndex = account.Locked ? 3 : 4;
+                accountNode.SelectedImageIndex = account.Locked ? 3 : 4;
+                accountNode.Account = account;
+                connectionNode.Nodes[0].Nodes.Add(accountNode);
+            }
+        }
+
+        
+
+        public static ConnectionNode GetConnectionNodeBySavedConnection(Connection connection)
+        {
+            var list = TreeView.Nodes.Cast<BaseTreeNode>().Where(x => x.NodeType == NodeType.Connection).ToList();
+            var connectionNodes = list.Cast<ConnectionNode>().ToList();
+            return connectionNodes.FirstOrDefault(x => x.Connection.Uid == connection.Uid);
+        }
+
+        public static void AddConnectionNodeIfNew(Connection connection)
+        {
+            var currentConnections = GetConnectionNodes();
+
+            if (currentConnections.All(x => x.Connection.Uid != connection.Uid))
+            {
+                var connectionNode = new ConnectionNode();
+                connectionNode.Text = connection.Name;
+                connectionNode.Connection = connection;
+
+                connectionNode.Nodes.Add(new AccountParentNode() { Text = "Accounts" });
+
+                TreeView.Nodes.Insert(TreeView.Nodes.Count, connectionNode);
+                TreeView.SelectedNode = connectionNode;
+
+
+            }
+        }
+
+        public static void SetConnectionNodeAsSelected(Connection connection)
+        {
+            var node = GetConnectionNodeBySavedConnection(connection);
             TreeView.SelectedNode = node;
         }
 

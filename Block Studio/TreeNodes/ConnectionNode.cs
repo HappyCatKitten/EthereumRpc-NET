@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ethereum.Wallet.Persistant;
+using BlockStudio.Persistant;
 
 namespace BlockStudio.TreeNodes
 {
     public class ConnectionNode : BaseTreeNode
     {
-        public SavedConnection SavedConnection { get; set; }
+        public Connection Connection { get; set; }
+        public bool HasLoaded { get; set; }
+
         public ConnectionNode()
         {
             this.NodeType = NodeType.Connection;

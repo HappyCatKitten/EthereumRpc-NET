@@ -116,8 +116,12 @@ namespace EthereumRpc.Ethereum
         /// <summary>
         /// Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
         /// </summary>
-        [JsonProperty(PropertyName = "transactions", Order = 0)]
-        public List<Transaction> Transactions { get; set; }
+        [JsonProperty(PropertyName = "transactionHashes", Order = 0)]
+        public List<string> TransactionHashes { get; set; }
+
+        [JsonProperty(PropertyName = "transactionsFull", Order = 0)]
+        public List<Transaction> TransactionsFull { get; set; }
+
 
         /// <summary>
         /// Array of uncle hashes.

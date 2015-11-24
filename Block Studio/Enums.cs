@@ -10,6 +10,15 @@ namespace BlockStudio
     {
         NewConnection = 0,
         Connection = 1,
+        AccountParent = 2,
+        Account = 3
+    }
+
+    public enum ConnectionStatus
+    {
+        Connected = 0,
+        CouldNotConnect = 1,
+        ConnectedButPersonalNotSuppored = 2
     }
 
     public enum EthereumStringType
@@ -19,5 +28,11 @@ namespace BlockStudio
         BlockHash = 2,
         BlockHashOrTxHash = 3,
         Unknown = 4
+    }
+
+    public enum ConnectionType
+    {
+        Attach = 0,
+        Instance = 1
     }
 }

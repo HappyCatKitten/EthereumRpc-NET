@@ -46,17 +46,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomControls\ButtonStandard.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\MessageBoxEx.cs" />
     <Compile Include="CustomControls\ConnectionPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CustomControls\ConnectionPanel.Designer.cs">
       <DependentUpon>ConnectionPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\FrmAccountPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FrmAccountPassword.Designer.cs">
+      <DependentUpon>FrmAccountPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FrmNewConnection.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\FrmNewConnection.Designer.cs">
       <DependentUpon>FrmNewConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FrmNewConnectionWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\FrmNewConnectionWizard.Designer.cs">
+      <DependentUpon>FrmNewConnectionWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Ethereum\EthereumSearchService.cs" />
@@ -67,15 +83,20 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Html\BrowserScriptInterface.cs" />
+    <Compile Include="Html\WebBrowserSettings.cs" />
+    <Compile Include="Html\HtmlService.cs" />
+    <Compile Include="Persistant\Account.cs" />
     <Compile Include="Persistant\FileSerialize.cs" />
-    <Compile Include="Persistant\PersistantState.cs" />
-    <Compile Include="Persistant\SavedConnection.cs" />
+    <Compile Include="Persistant\Persistance.cs" />
+    <Compile Include="Persistant\Connection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabs\Tab.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tabs\TabManager.cs" />
+    <Compile Include="TreeNodes\AccountNode.cs" />
     <Compile Include="TreeNodes\BaseTreeNode.cs" />
     <Compile Include="TreeNodes\ConnectionNode.cs" />
     <Compile Include="TreeNodes\NewConnectionNode.cs" />
@@ -83,8 +104,14 @@
     <EmbeddedResource Include="CustomControls\ConnectionPanel.resx">
       <DependentUpon>ConnectionPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FrmAccountPassword.resx">
+      <DependentUpon>FrmAccountPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\FrmNewConnection.resx">
       <DependentUpon>FrmNewConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\FrmNewConnectionWizard.resx">
+      <DependentUpon>FrmNewConnectionWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
