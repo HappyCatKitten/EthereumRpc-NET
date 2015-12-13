@@ -52,6 +52,7 @@ namespace EthereumRpc
             }
             catch (WebException exception)
             {
+                
                 throw new EthereumRpcException(string.Format("Could not connect to ethereum on network address {0}:{1}. Check Ethereum is running and the correct port is specified (8545 for live)", ConnectionOptions.Url, ConnectionOptions.Port));
             }
             catch (Exception exception)

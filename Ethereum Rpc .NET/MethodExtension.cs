@@ -44,14 +44,14 @@ namespace System
             var divRem1 = BigInteger.Zero;
             var bal = BigInteger.DivRem(value, 1000000000000000000, out divRem1);
             var balanceString = string.Format("{0}.{1}", bal, divRem1);
-            return balanceString;
+            var decimalBalance = decimal.Parse(balanceString);
+            return decimalBalance.ToString("0.00");
         }
 
 
         public static string ToHexString(this string value)
         {
             var result = string.Format("0x{0}", value.ToBigInteger().ToString("X").ToLower());
-
             return result;
         }
 

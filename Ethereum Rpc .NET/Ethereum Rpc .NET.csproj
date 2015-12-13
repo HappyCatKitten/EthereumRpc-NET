@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EthereumRpcException.cs" />
+    <Compile Include="Ethereum\AbiDefinition\AbiItem.cs" />
     <Compile Include="Ethereum\Address.cs" />
     <Compile Include="Connection\ConnectionOptions.cs" />
     <Compile Include="Enums.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Ethereum\Whisper.cs" />
     <Compile Include="Ethereum\Work.cs" />
     <Compile Include="RpcObjects\Transaction.cs" />
+    <Compile Include="Service\EncryptionService.cs" />
     <Compile Include="Service\EtherCurrencyConverter.cs" />
     <Compile Include="Service\EthereumService.cs" />
     <Compile Include="MethodExtension.cs" />

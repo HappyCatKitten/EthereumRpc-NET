@@ -497,35 +497,26 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
-        public string Call(string from, string to, int gas, string data, int gasPrice = -1, int value = -1, int nonce = -1)
+        public string Call(Transaction transaction)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_call);
-            var transactionParams = new Transaction();
-            transactionParams.From = from;
-            transactionParams.To = to;
-            transactionParams.Gas = gas.ToHexString();
-            transactionParams.Data = data;
-
-            if (gasPrice > -1)
-                transactionParams.GasPrice = gas.ToHexString();
-
-            if (value > -1)
-                transactionParams.Value = value.ToHexString();
-
-            if (nonce > -1)
-                transactionParams.Nonce = nonce.ToHexString();
-
-            rpcRequest.AddParam(transactionParams);
+            rpcRequest.AddParam(transaction);
+            rpcRequest.AddParam(BlockTag.Latest.ToJsonMethodName());
 
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
             return rpcResult.Result;
         }
 
-        public string EstimateGas()
+        public string EstimateGas(Transaction transaction)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_estimateGas);
-            throw new Exception("not implemented");
-            return string.Empty;
+            rpcRequest.AddParam(transaction);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            string gas = rpcResult.Result.ToString();
+            //var estimatedGas = gas.HexToInt();
+
+            return gas;
         }
 
         public Block GetBlockByHash(string hash,bool returnFullBlock)
@@ -542,6 +533,11 @@ namespace EthereumRpc
             if (returnFullBlock)
             {
                 block.TransactionsFull = JsonConvert.DeserializeObject<List<Transaction>>(jsonTransactions);
+
+                if (block.TransactionsFull.Count > 0)
+                {
+                    int i = 100;
+                }
             }
             else
             {
@@ -663,14 +659,14 @@ namespace EthereumRpc
             return compilerList.ToArray();
         }
 
-        public string CompileSolidity(string contract)
+        public RpcResult CompileSolidity(string contract)
         {
             var rpcRequest = new RpcRequest(RpcMethod.eth_compileSolidity);
 
             rpcRequest.AddParam(contract);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
 
-            return rpcResult.Result;
+            return rpcResult;
         }
 
         public string CompileLLL()
@@ -729,13 +725,28 @@ namespace EthereumRpc
             rpcRequest.AddParam(filterId);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
             var list = new List<Log>();
+
             foreach (var account in rpcResult.Result)
             {
                 var log = new Log(account);
-     
+
                 list.Add(log);
             }
             return list.ToArray();
+        }
+
+        public List<string> GetBlockFilterChanges(string filterId)
+        {
+            var rpcRequest = new RpcRequest(RpcMethod.eth_getFilterChanges);
+            rpcRequest.AddParam(filterId);
+            var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+            var list = new List<string>();
+
+            foreach (var blockHash in rpcResult.Result)
+            {
+                list.Add(blockHash.ToString());
+            }
+            return list;
         }
 
 
@@ -846,12 +857,24 @@ namespace EthereumRpc
             return rpcResult.Result;
         }
 
+        /// <summary>
+        /// Unlocks account using password
+        /// </summary>
+        /// <param name="account">The account address</param>
+        /// <param name="password">The password for the account</param>
+        /// <returns></returns>
         public bool UnlockAccount(string account, string password)
         {
             var rpcRequest = new RpcRequest(RpcMethod.personal_unlockAccount);
             rpcRequest.AddParam(account);
             rpcRequest.AddParam(password);
             var rpcResult = new RpcConnector().MakeRequest(rpcRequest);
+
+            if (rpcResult.Error != null)
+            {
+                return false;
+            }
+
             return rpcResult.Result;
         }
 
