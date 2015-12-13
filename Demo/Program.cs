@@ -6,35 +6,71 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using EthereumRpc;
 using EthereumRpc.Ethereum;
 using EthereumRpc.RpcObjects;
 using EthereumRpc.Service;
+using HashLib;
+
 
 namespace Demo
 {
     class Program
     {
 
-        static void Main(string[] args)
-        {
 
+        /// <summary>
+        /// Convert an array of bytes to a string of hex digits
+        /// </summary>
+        /// <param name="bytes">array of bytes</param>
+        /// <returns>String of hex digits</returns>
+        public static string HexStringFromBytes(byte[] bytes)
+        {
+            var sb = new StringBuilder();
+            foreach (byte b in bytes)
+            {
+                var hex = b.ToString("x2");
+                sb.Append(hex);
+            }
+            return sb.ToString();
+        }
+
+
+        private static void Main(string[] args)
+        {
+            //var correct = "0x6d4ce63c";
+            //var value = "get()";
+
+            ////byte[] b2 = System.Text.Encoding.ASCII.GetBytes(value);
+            ////var sha = new SHA256Managed();
+            ////var myByte = sha.ComputeHash(b2);
+            //////var x = new EthereumService("http://localhost", "8545").GetWeb3Sha3(value);
+
+            ////myByte.ToString("X2");
+
+
+            //var x = SHA1HashStringForUTF8String(value);
+
+            //var result = x.Substring(0, 10);
+            //Console.WriteLine("this:   " + result);
+            //Console.WriteLine();
+            //Console.WriteLine("correct:" + correct);
+
+
+            //Console.ReadKey();
+
+        }
+
+        static void Main1(string[] args)
+        {
+         
+            return;
             var ipc = @"\\.\pipe\geth.ipc";
 
             IpcChannel ipcCh = new IpcChannel(ipc);
-
-            
-
-
-
-
-
-
-
-
-
 
             var liveConnection = new ConnectionOptions()
             {

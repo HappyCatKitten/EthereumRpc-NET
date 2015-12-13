@@ -13,7 +13,7 @@ namespace BlockStudio.TreeNodes
 
         public BaseTreeNode()
         {
-           
+
         }
     }
 }

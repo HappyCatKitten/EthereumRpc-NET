@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace BlockStudio.Persistant
+namespace BlockStudio.Project
 {
     public class FileSerialize
     {

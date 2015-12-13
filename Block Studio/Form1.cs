@@ -5,12 +5,15 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BlockStudio.CustomControls;
 using BlockStudio.Dialogs;
 using BlockStudio.Ethereum;
-using BlockStudio.Persistant;
+using BlockStudio.HtmlGenerator;
+using BlockStudio.Project;
+using BlockStudio.Settings;
 using BlockStudio.Tabs;
 using BlockStudio.TreeNodes;
 
@@ -22,82 +25,176 @@ namespace BlockStudio
         public Form1()
         {
             InitializeComponent();
-
-            var newConnectionNode = new NewConnectionNode();
-            tvConnections.Nodes.Add(newConnectionNode);
             TreeNodeManager.TreeView = tvConnections;
-            TabManager.TabControl = tabControl1;
 
-            PersistantState.LoadStates();
-            LoadTreeNodeConnections();
+            BlockStudioProjectService.BlockStudioSettings = BlockStudioSettings.Load();
+
+            if (BlockStudioProjectService.BlockStudioSettings.RecentProjects.Any())
+            {
+                var lastProject = BlockStudioProjectService.BlockStudioSettings.RecentProjects.LastOrDefault();
+                BlockStudioProjectService.BlockStudioProject = BlockStudioProject.LoadFromPath(lastProject);
+                LoadProject();
+
+            }
+            else
+            {
+                //NewProjectDialog();
+            }
 
             tvConnections.NodeMouseClick += TvConnections_Click;
             tvConnections.NodeMouseDoubleClick += TvConnections_NodeMouseDoubleClick;
             tvConnections.BeforeExpand += TvConnections_BeforeExpand;
+            tvConnections.KeyDown += TvConnections_KeyDown;
+
+            
+            HtmlTabManager.HtmlEditorTextBox = txtHtmlEditor;
         }
+
+        private void LoadProject()
+        {
+            if (BlockStudioProjectService.BlockStudioProject != null)
+            {
+                TreeNodeManager.RefreshProject();
+
+                var runningPort = BlockStudioProjectService.BlockStudioProject.Connection.RpcPort;
+
+                var gethInstanceState = GethService.GetPortAndInstanceUse(runningPort);
+                if (gethInstanceState == GethInstanceState.NoInstanceRunning)
+                {
+                    // run geth
+                    //GethService.RunGethInstance(BlockStudioProjectService.BlockStudioProject.Connection);
+                    //Thread.Sleep(1000);
+                    //AttemptConnection(TreeNodeManager.GetConnectionNode());
+                    //connectionPanel1.BindControls();
+                }
+
+                tabControl1.Visible = true;
+            }
+        }
+
+        private void TvConnections_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+            if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+            {
+                //DeleteConnection();
+            }
+        }
+
 
         private void TvConnections_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
+            if (BlockStudioProjectService.BlockStudioProject == null)
+            {
+                return;
+            }
+
             var baseTreeNode = (BaseTreeNode) e.Node;
 
             if (baseTreeNode.NodeType == NodeType.Connection)
             {
                 var connectionNode = (ConnectionNode) baseTreeNode;
-                if (!connectionNode.HasLoaded)
+                if (!connectionNode.HasConnected)
                 {
                     AttemptConnection(connectionNode);
-                    connectionNode.HasLoaded = true;
                 } 
             }
         }
 
         private void AttemptConnection(ConnectionNode connectionNode)
         {
-            // attempt connection
-            var connectionStatus = connectionNode.Connection.GetConnectionProperties();
+            connectionNode.ImageIndex = 5;
+            var rememberText = connectionNode.Text;
+            connectionNode.Text = connectionNode.Text + (connectionNode.HasConnected ? " (Refreshing...)" : " (Loading...)");
+            connectionNode.ForeColor = SystemColors.GrayText;
+            tvConnections.SelectedNode = null;
+
+            var bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += WorkerAttemptConnection;
+            bgWorker.RunWorkerAsync(new { connectionNode ,rememberText});
+
+            
+        }
+
+        private void WorkerAttemptConnection(object sender, DoWorkEventArgs e)
+        {
+            var values = (dynamic) e.Argument;
+            var connectionNode = (ConnectionNode)values.connectionNode;
+            var rememberText = values.rememberText;
+            var connectionStatus = BlockStudioProjectService.BlockStudioProject.Connection.GetConnectionProperties();
 
             if (connectionStatus == ConnectionStatus.CouldNotConnect)
             {
-                MessageBoxEx.Show(this, "Could not connect to Ethereum", "Block Studio", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    
+                    var result = MessageBoxEx.Show(this, string.Format("Could not connect, is Ethereum running on port {0}?", BlockStudioProjectService.BlockStudioProject.Connection.RpcPort), "Block Studio", MessageBoxButtons.RetryCancel,
+                        MessageBoxIcon.Error);
+
+                    if (result == DialogResult.Retry)
+                    {
+                        AttemptConnection(connectionNode);
+                    }
+                });
             }
             else if (connectionStatus == ConnectionStatus.ConnectedButPersonalNotSuppored)
             {
-                MessageBoxEx.Show(this, "Connected But Personal Not Suppored", "Block Studio", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    MessageBoxEx.Show(this, string.Format(@"Connected but account creation not supported.{0}{0}Run geth with --rpcapi ""eth,web3,personal"" parameter", Environment.NewLine), "Block Studio", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                });
             }
             else
             {
-                TreeNodeManager.ExpandConnectionProperties(connectionNode);
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    TreeNodeManager.ExpandConnectionProperties(connectionNode);
+
+                    if (!connectionNode.HasConnected)
+                    {
+                        connectionNode.HasConnected = true;
+                        connectionPanel1.BindControls();
+                    }
+                });
+
+                
             }
+
+            BeginInvoke((MethodInvoker)delegate
+            {
+                connectionNode.Text = rememberText;
+                connectionNode.ForeColor = Color.Black;
+                connectionNode.ImageIndex = 1;
+            });
         }
 
         private void TvConnections_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            if (BlockStudioProjectService.BlockStudioProject == null)
+            {
+                return;
+            }
+
             var p = new Point(e.X, e.Y);
             var baseTreeNode = (BaseTreeNode)tvConnections.GetNodeAt(p);
             TvConnectionsLeftClick(baseTreeNode);
-
         }
 
-        private void LoadTreeNodeConnections()
-        {
-            foreach (var savedConnection in PersistantState.SavedConnections)
-            {
-                TreeNodeManager.AddConnectionNodeIfNew(savedConnection);
-            }
-        }
-
-        //private void UpdateNode(Connection Connection)
-        //{
-        //    foreach (var Connection in Persistance.SavedConnections)
-        //    {
-        //        TreeNodeManager.AddConnectionNodeIfNew(Connection);
-        //    }
-        //}
 
         private void TvConnections_Click(object sender, MouseEventArgs e)
         {
+            if (BlockStudioProjectService.BlockStudioProject == null)
+            {
+                return;
+            }
+
             var p = new Point(e.X, e.Y);
-            var baseTreeNode = (BaseTreeNode)tvConnections.GetNodeAt(p);
+            var selectedNode = tvConnections.GetNodeAt(p);
+
+            if (selectedNode == null)
+                return;
+
+            var baseTreeNode = (BaseTreeNode) selectedNode;
 
             // check if the right mouse button was pressed
             if (e.Button == MouseButtons.Left)
@@ -113,6 +210,8 @@ namespace BlockStudio
 
         private void TvConnectionsRightClick(BaseTreeNode treeNode)
         {
+            tvConnections.ContextMenuStrip = null;
+
             SelectedNode = treeNode;
 
             if (treeNode.NodeType == NodeType.NewConnection)
@@ -123,8 +222,9 @@ namespace BlockStudio
             {
                 var connectionNode = (ConnectionNode)(treeNode);
 
-                if (connectionNode.Connection.ConnectionType == ConnectionType.Instance)
+                if (BlockStudioProjectService.BlockStudioProject.Connection.ConnectionType == ConnectionType.Instance)
                 {
+                    ConnectionNodeContextMenu.Items[0].Text = connectionNode.HasConnected ? "&Refresh" : "&Connect";
                     ConnectionNodeContextMenu.Items[3].Enabled = true;
                 }
                 else
@@ -141,54 +241,42 @@ namespace BlockStudio
             }
             else if (treeNode.NodeType == NodeType.Account)
             {
-                var accountNode = (AccountNode) treeNode;
-                if (accountNode.Account.Locked)
-                {
-                    AccountContextMenuStrip.Items[0].Enabled = true;
-                    AccountContextMenuStrip.Items[1].Enabled = false;
-                }
-                else
+                var accountNode = (AccountNode)treeNode;
+                if (accountNode.Account.LockState == LockedState.Unlocked)
                 {
                     AccountContextMenuStrip.Items[0].Enabled = false;
                     AccountContextMenuStrip.Items[1].Enabled = true;
                 }
+                else
+                {
+                    AccountContextMenuStrip.Items[0].Enabled = true;
+                    AccountContextMenuStrip.Items[1].Enabled = false;
+                }
+
                 tvConnections.ContextMenuStrip = AccountContextMenuStrip;
+            }
+            else if (treeNode.NodeType == NodeType.Address)
+            {
+                tvConnections.ContextMenuStrip = addressMenuStrip;
             }
 
         }
 
         private void TvConnectionsLeftClick(BaseTreeNode baseTreeNode)
         {
-            //var thisNode = (BaseTreeNode) e.Node;
-            if (baseTreeNode.NodeType==NodeType.NewConnection)
-            {
-                //var frmNewConnection = new FrmNewConnection();
-                // frmNewConnection.ShowDialog();
-
-                var frmNewConnection = new FrmNewConnectionWizard();
-                 frmNewConnection.ShowDialog();
-
-                LoadTreeNodeConnections();
-            }
-            else if (baseTreeNode.NodeType == NodeType.Connection)
+            if (baseTreeNode.NodeType == NodeType.Connection)
             {
                 var connectionNode = (ConnectionNode)baseTreeNode;
 
-                if (!connectionNode.HasLoaded)
+                if (!connectionNode.HasConnected)
                 {
                     AttemptConnection(connectionNode);
-                    connectionNode.HasLoaded = true;
+                    
                 }
-
-                OpenOrSetTab(connectionNode.Connection);
             }
         }
 
-        private void OpenOrSetTab(Connection connection)
-        {
-            TabManager.AddConnectionTabIfNew(connection);
-            TabManager.SetSelectedTab(connection);
-        }
+ 
 
         private void renameConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -197,44 +285,46 @@ namespace BlockStudio
 
         private void deleteConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = MessageBoxEx.Show(this,"Are you sure you want to delete this connection", "Block Studio",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                var selectedNode = (ConnectionNode)tvConnections.SelectedNode;
-                var savedConnection = selectedNode.Connection;
-                PersistantState.RemoveSavedConnection(savedConnection);
-                tvConnections.SelectedNode = null;
-                tvConnections.Nodes.Remove(selectedNode);
-            }
+            //DeleteConnection();
 
         }
 
-        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var selectedNode = (ConnectionNode)tvConnections.SelectedNode;
-            var savedConnection = selectedNode.Connection;
+        //private void DeleteConnection()
+        //{
+        //    var result = MessageBoxEx.Show(this, "Are you sure you want to delete this connection", "Block Studio", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            var frmNewConnection = new FrmNewConnection(savedConnection);
-            frmNewConnection.ShowDialog();
+        //    if (result == DialogResult.Yes)
+        //    {
+        //        var selectedNode = (ConnectionNode)tvConnections.SelectedNode;
+        //        var savedConnection = selectedNode.Connection;
+        //        BlockStudioProjectService.RemoveSavedConnection(savedConnection);
+        //        tvConnections.SelectedNode = null;
+        //        tvConnections.Nodes.Remove(selectedNode);
+        //    }
+        //}
 
-            TreeNodeManager.UpdateConnectionNodes();
-        }
 
         private void LaunchInstanceMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedNode = (ConnectionNode)tvConnections.SelectedNode;
-            var savedConnection = selectedNode.Connection;
-
-            GethService.RunGethInstance(savedConnection);
+            var getInstanceState = GethService.GetPortAndInstanceUse(BlockStudioProjectService.BlockStudioProject.Connection.RpcPort);
+            if (getInstanceState == GethInstanceState.InstanceRunning)
+            {
+                MessageBoxEx.Show(this, string.Format("RpcPort {0} currently in use", BlockStudioProjectService.BlockStudioProject.Connection.RpcPort), "Block Studio", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+                GethService.RunGethInstance(BlockStudioProjectService.BlockStudioProject.Connection);
+            }
         }
 
         private void newAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var connectionNode = (ConnectionNode)SelectedNode.Parent;
-            var frm = new FrmAccountPassword(connectionNode.Connection);
+            var frm = new FrmAccountProperties(BlockStudioProjectService.BlockStudioProject.Connection, 0);
             frm.ShowDialog(this);
+
+            BlockStudioProjectService.BlockStudioSettings.SetLastProjectLocation(BlockStudioProjectService.BlockStudioProject.ProjectFileSavePath);
+
             AttemptConnection(connectionNode);
         }
 
@@ -248,9 +338,53 @@ namespace BlockStudio
         {
             var accountNode = (AccountNode)(SelectedNode);
             var connectionNode = (ConnectionNode)(SelectedNode.Parent.Parent);
-            var frm = new FrmAccountPassword(connectionNode.Connection, accountNode.Account.AccountId);
+            var frm = new FrmAccountProperties(BlockStudioProjectService.BlockStudioProject.Connection, 1,accountNode.Account);
             frm.ShowDialog(this);
             AttemptConnection(connectionNode);
         }
+
+        private void newConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewProjectDialog();
+        }
+
+        private void NewProjectDialog()
+        {
+            var frmNewConnection = new FrmNewProject();
+            frmNewConnection.ShowDialog();
+
+            BlockStudioProjectService.BlockStudioSettings.SetLastProjectLocation(BlockStudioProjectService.BlockStudioProject.ProjectFileSavePath);
+
+            LoadProject();
+        }
+
+        private void renameAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var accountNode = (AccountNode)(SelectedNode);
+            var connectionNode = (ConnectionNode)accountNode.Parent.Parent;
+            var frm = new FrmAccountProperties(BlockStudioProjectService.BlockStudioProject.Connection, 0, accountNode.Account);
+            frm.ShowDialog(this);
+            AttemptConnection(connectionNode);
+        }
+
+        private void copyAddressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var addressNode = (AddressNode)(SelectedNode);
+            Clipboard.SetText(addressNode.Text);
+        }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frm = new ConnectionProperties();
+            frm.ShowDialog();
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frm = new FrmOptions();
+            frm.ShowDialog();
+        }
+
+
     }
 }

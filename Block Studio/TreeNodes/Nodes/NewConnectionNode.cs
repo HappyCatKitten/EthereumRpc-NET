@@ -11,7 +11,7 @@ namespace BlockStudio.TreeNodes
         public NewConnectionNode()
         {
             NodeType = NodeType.NewConnection;
-            Text = "Add Connection";
+            Text = "Add connection";
             ImageIndex = 0;
             SelectedImageIndex = 0;
         }

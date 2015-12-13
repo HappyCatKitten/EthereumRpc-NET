@@ -34,6 +34,17 @@ namespace BlockStudio.Html
             return html;
         }
 
+        public static string NoResults()
+        {
+            var html = Header();
+
+            html += string.Format("No objects found");
+
+            html += Footer();
+
+            return html;
+        }
+
         public static string BlockHtml(Block block)
         {
             var html = Header();
