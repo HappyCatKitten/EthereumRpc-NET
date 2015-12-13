@@ -9,7 +9,7 @@ using EthereumRpc.RpcObjects;
 namespace BlockStudio.Html
 {
     public class HtmlService
-    {
+    { 
         private static string Header()
         {
             return "<html><body oncontextmenu='return false'><style>body {padding - top: 50px; padding - bottom: 20px;font-family:arial;</style>";
