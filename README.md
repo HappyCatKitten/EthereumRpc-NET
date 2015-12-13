@@ -40,9 +40,9 @@ Supported RPC calls
 - eth_getUncleCountByBlockNumber
 - eth_getCode
 - eth_sign
-- eth_sendTransaction - **unfinished**
-- eth_sendRawTransaction - **unfinished**
-- eth_call - **unfinished**
+- eth_sendTransaction
+- eth_sendRawTransaction
+- eth_call
 - eth_estimateGas
 - eth_getBlockByHash
 - eth_getBlockByNumber
@@ -60,8 +60,8 @@ Supported RPC calls
 - eth_newBlockFilter
 - eth_newPendingTransactionFilter
 - eth_uninstallFilter
-- eth_getFilterChanges -**untested**
-- eth_getFilterLogs - **untested**
+- eth_getFilterChanges
+- eth_getFilterLogs
 - eth_getLogs
 - eth_getWork
 - eth_submitWork
