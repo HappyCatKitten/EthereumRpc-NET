@@ -101,6 +101,4 @@ Roadmap
 - Hash functions
 - Helpers for non ethereum types
 
-Support
 
-lawrence@9thirteencreative.com
